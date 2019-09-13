@@ -1,12 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class DUIAnchor : MonoBehaviour
 {
-    public enum Anchor { topLeft, topCenter, topRight, middleLeft, middleCenter, middleRight, bottomLeft, bottomCenter, bottomRight, custom }
-
-    //[SerializeField] private Anchor anchor;
     [SerializeField] private Vector2 min;
     [SerializeField] private Vector2 max;
 
@@ -36,53 +34,12 @@ public class DUIAnchor : MonoBehaviour
         transform.position = bounds.center;
     }
 
-    /*
-    public void SetPosition(float width, float height)
+    public void SetMinMax(Vector2 min, Vector2 max)
     {
-        transform.localPosition = Vector3.zero;
-        //adjust x position of UI element
-        switch (anchor)
-        {
-            //left
-            case Anchor.topLeft:
-            case Anchor.middleLeft:
-            case Anchor.bottomLeft:
-                transform.localPosition += Vector3.right * (-width + bounds.x);
-                break;
-            //right
-            case Anchor.topRight:
-            case Anchor.middleRight:
-            case Anchor.bottomRight:
-                transform.localPosition += Vector3.right * (width + bounds.x);
-                break;
-            //center
-            default:
-                transform.localPosition += Vector3.right * bounds.x;
-                break;
-        }
-
-        //adjust y position of UI element
-        switch (anchor)
-        {
-            //up
-            case Anchor.topLeft:
-            case Anchor.topCenter:
-            case Anchor.topRight:
-                transform.localPosition += Vector3.up * (height + bounds.y);
-                break;
-            //down
-            case Anchor.bottomLeft:
-            case Anchor.bottomCenter:
-            case Anchor.bottomRight:
-                transform.localPosition  += Vector3.up * (-height + bounds.y);
-                break;
-            //middle
-            default:
-                transform.localPosition += Vector3.up * bounds.y;
-                break;
-        }
+        this.min = min;
+        this.max = max;
     }
-    */
+
     /// <summary>
     /// draw a green collider based on area
     /// </summary>
@@ -104,3 +61,28 @@ public class DUIAnchor : MonoBehaviour
         Gizmos.DrawLine(bottomLeft, topLeft); //left
     }
 }
+
+
+[CustomEditor(typeof(DUIAnchor))]
+[CanEditMultipleObjects]
+public class DUIAnchorEditor : Editor
+{
+    SerializedProperty min;
+    SerializedProperty max;
+
+    private void OnEnable()
+    {
+        min = serializedObject.FindProperty("min");
+        max = serializedObject.FindProperty("max");
+    }
+
+    public override void OnInspectorGUI()
+    {
+        serializedObject.Update();
+
+        min.vector2Value = EditorGUILayout.Vector2Field("min", min.vector2Value);
+        max.vector2Value = EditorGUILayout.Vector2Field("max", max.vector2Value);
+
+        serializedObject.ApplyModifiedProperties();
+    }
+} 
