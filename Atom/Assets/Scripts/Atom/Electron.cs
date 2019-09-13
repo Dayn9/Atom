@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Electron : Particle
+namespace Atom
 {
-    
+    public class Electron : Particle
+    {
+
+    }
 }

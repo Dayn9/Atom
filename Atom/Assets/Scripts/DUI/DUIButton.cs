@@ -3,57 +3,61 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(DUIAnchor))]
-public class DUIButton : MonoBehaviour
+namespace DUI
 {
-    private DUIAnchor anchor; //ref to spriteRenderer component
 
-    private bool active = true;
-    private bool mouseOver = false;
-
-    public UnityEvent OnEnter;
-    public UnityEvent OnClick;
-    public UnityEvent OnExit;
-
-    protected virtual void Awake()
+    [RequireComponent(typeof(DUIAnchor))]
+    public class DUIButton : MonoBehaviour
     {
-        anchor = GetComponent<DUIAnchor>();
+        private DUIAnchor anchor; //ref to spriteRenderer component
 
-        OnEnter.AddListener(Enter);
-        OnExit.AddListener(Exit);
-    }
+        private bool active = true;
+        private bool mouseOver = false;
 
-    protected virtual void Update()
-    {
-        if (active)
+        public UnityEvent OnEnter;
+        public UnityEvent OnClick;
+        public UnityEvent OnExit;
+
+        protected virtual void Awake()
         {
-            bool over = anchor.Rect.Contains((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition));
-            if (!mouseOver && over)
+            anchor = GetComponent<DUIAnchor>();
+
+            OnEnter.AddListener(Enter);
+            OnExit.AddListener(Exit);
+        }
+
+        protected virtual void Update()
+        {
+            if (active)
             {
-                OnEnter?.Invoke();
+                bool over = anchor.Rect.Contains(DUI.mousePos);
+                if (!mouseOver && over)
+                {
+                    OnEnter?.Invoke();
+                }
+                else if (mouseOver && !over)
+                {
+                    OnExit?.Invoke();
+                }
+                if (mouseOver && Input.GetMouseButtonDown(0))
+                {
+                    OnClick?.Invoke();
+                }
             }
-            else if (mouseOver && !over)
+            else if (mouseOver)
             {
                 OnExit?.Invoke();
             }
-            if (mouseOver && Input.GetMouseButtonDown(0))
-            {
-                OnClick?.Invoke();
-            }
         }
-        else if(mouseOver)
+
+        private void Enter()
         {
-            OnExit?.Invoke();
+            mouseOver = true;
         }
-    }
 
-    private void Enter()
-    {
-        mouseOver = true;
-    }
-
-    private void Exit()
-    {
-        mouseOver = false;
+        private void Exit()
+        {
+            mouseOver = false;
+        }
     }
 }

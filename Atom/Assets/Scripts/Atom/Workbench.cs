@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DUI;
+using Atom;
 
 [RequireComponent(typeof(DUIAnchor))]
 public class Workbench : MonoBehaviour
@@ -9,10 +11,13 @@ public class Workbench : MonoBehaviour
     [SerializeField] private GameObject NeutronPrefab;
     [SerializeField] private GameObject ElectronPrefab;
 
+    private Atom.Atom atom;
+
     private void Awake()
     {
+        atom = FindObjectOfType<Atom.Atom>();
         //make sure there are at least 3 children
-        if(transform.childCount >= 3)
+        if (transform.childCount >= 3)
         {
             GameObject proton = Instantiate(ProtonPrefab, transform.GetChild(0));
             proton.transform.localPosition = Vector3.zero;
@@ -32,11 +37,10 @@ public class Workbench : MonoBehaviour
         GameObject obj = Instantiate(ProtonPrefab, transform.GetChild(0));
 
         Proton proton = obj.GetComponent<Proton>();
-        if(proton != null)
+        if (proton != null)
         {
             proton.OnSelect?.Invoke();
         }
-        
     }
 
     public void NewNeutron()
@@ -65,3 +69,4 @@ public class Workbench : MonoBehaviour
         }
     }
 }
+

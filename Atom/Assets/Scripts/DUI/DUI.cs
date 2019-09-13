@@ -1,33 +1,40 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class DUI : MonoBehaviour
+namespace DUI
 {
-    private Camera cam;
-
-    public static float cameraHeight;
-    public static float cameraWidth;
-
-    public static Vector2 mousePos;
-
-    private void Awake()
+    public class DUI : MonoBehaviour
     {
-        cam = Camera.main;
+        private Camera cam;
 
-        //Orthographic setup
-        if (cam.orthographic)
+        public static float cameraHeight;
+        public static float cameraWidth;
+
+        public static Vector2 mousePos;
+
+        private void Awake()
         {
-            cameraHeight = cam.orthographicSize;
+            cam = Camera.main;
+
+            //Orthographic setup
+            if (cam.orthographic)
+            {
+                cameraHeight = cam.orthographicSize;
+            }
+            //Perspective setup
+            else
+            {
+                //make sure vertical fov is 60
+                cam.fieldOfView = 60;
+                cameraHeight = (transform.position.z - cam.transform.position.z) / Mathf.Sqrt(3);
+            }
+            cameraWidth = cameraHeight * Screen.width / Screen.height;
         }
-        //Perspective setup
-        else
+
+        private void Update()
         {
-            //make sure vertical fov is 60
-            cam.fieldOfView = 60;
-            cameraHeight = (transform.position.z - cam.transform.position.z) / Mathf.Sqrt(3);
+            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
-        cameraWidth = cameraHeight * Screen.width / Screen.height;
+
     }
-
 }
