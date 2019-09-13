@@ -29,4 +29,5 @@ public class DUI : MonoBehaviour
         }
         cameraWidth = cameraHeight * Screen.width / Screen.height;
     }
+
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using System;
 
 [RequireComponent(typeof(DUIAnchor))]
 public class DUIButton : MonoBehaviour
@@ -27,8 +26,8 @@ public class DUIButton : MonoBehaviour
     protected virtual void Update()
     {
         if (active)
-        { 
-            bool over = anchor.Bounds.Contains((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition));
+        {
+            bool over = anchor.Rect.Contains((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition));
             if (!mouseOver && over)
             {
                 OnEnter?.Invoke();

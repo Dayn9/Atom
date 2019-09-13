@@ -11,6 +11,7 @@ public class DUIAnchor : MonoBehaviour
     private Bounds bounds;
 
     public Bounds Bounds { get { return bounds; } }
+    public Rect Rect { get { return new Rect(bounds.center, bounds.size); } }
 
     private void Start()
     {
@@ -29,8 +30,8 @@ public class DUIAnchor : MonoBehaviour
         
         bounds = new Bounds(new Vector2 (r.center.x + ((max.x + min.x - 1) / 2) * r.size.x,
                                          r.center.y + ((max.y + min.y - 1) / 2) * r.size.y),
-                            new Vector2 (r.size.x * (max.x - min.x),
-                                         r.size.y * (max.y - min.y)));
+                            new Vector2 (r.size.x * Mathf.Abs(max.x - min.x),
+                                         r.size.y * Mathf.Abs(max.y - min.y)));
         transform.position = bounds.center;
     }
 
