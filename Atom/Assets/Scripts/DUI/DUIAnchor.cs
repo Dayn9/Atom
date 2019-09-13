@@ -4,29 +4,39 @@ using UnityEngine;
 
 public class DUIAnchor : MonoBehaviour
 {
-    public enum Anchor { topLeft, topCenter, topRight, middleLeft, middleCenter, middleRight, bottomLeft, bottomCenter, bottomRight }
+    public enum Anchor { topLeft, topCenter, topRight, middleLeft, middleCenter, middleRight, bottomLeft, bottomCenter, bottomRight, custom }
 
-    [SerializeField] private Anchor anchor;
-    [SerializeField] private Rect bounds;
+    //[SerializeField] private Anchor anchor;
+    [SerializeField] private Vector2 min;
+    [SerializeField] private Vector2 max;
+
+    private Bounds bounds;
+
+    public Bounds Bounds { get { return bounds; } }
 
     private void Start()
     {
         if(transform.parent.GetComponent<DUIAnchor>() == null)
         {
-            SetPosition();
+            SetPosition(new Bounds(Vector2.zero, new Vector2 (DUI.cameraWidth , DUI.cameraHeight) * 2));
             foreach (DUIAnchor duia in GetComponentsInChildren<DUIAnchor>(true))
             {
                 if(duia != this) 
-                    duia.SetPosition(bounds.width, bounds.height);
+                    duia.SetPosition(bounds);
             }
         }
     }
 
-    public void SetPosition()
-    {
-        SetPosition(DUI.cameraWidth, DUI.cameraHeight);
+    public void SetPosition(Bounds r) {
+        
+        bounds = new Bounds(new Vector2 (r.center.x + ((max.x + min.x - 1) / 2) * r.size.x,
+                                         r.center.y + ((max.y + min.y - 1) / 2) * r.size.y),
+                            new Vector2 (r.size.x * (max.x - min.x),
+                                         r.size.y * (max.y - min.y)));
+        transform.position = bounds.center;
     }
 
+    /*
     public void SetPosition(float width, float height)
     {
         transform.localPosition = Vector3.zero;
@@ -72,7 +82,7 @@ public class DUIAnchor : MonoBehaviour
                 break;
         }
     }
-
+    */
     /// <summary>
     /// draw a green collider based on area
     /// </summary>
@@ -80,12 +90,12 @@ public class DUIAnchor : MonoBehaviour
     {
         Gizmos.color = Color.cyan;
 
-        Vector2 center = new Vector2(transform.position.x + bounds.x, transform.position.y + bounds.y);
+        Vector2 center = bounds.center;
 
-        Vector2 topLeft = new Vector2(center.x - bounds.width, center.y + bounds.height);
-        Vector2 topRight = new Vector2(center.x + bounds.width, center.y + bounds.height);
-        Vector2 bottomLeft = new Vector2(center.x - bounds.width, center.y - bounds.height);
-        Vector2 bottomRight = new Vector2(center.x + bounds.width, center.y - bounds.height);
+        Vector2 topLeft = new Vector2(center.x - bounds.extents.x, center.y + bounds.extents.y);
+        Vector2 topRight = new Vector2(center.x + bounds.extents.x, center.y + bounds.extents.y);
+        Vector2 bottomLeft = new Vector2(center.x - bounds.extents.x, center.y - bounds.extents.y);
+        Vector2 bottomRight = new Vector2(center.x + bounds.extents.x, center.y - bounds.extents.y);
 
         //draw lines between corners
         Gizmos.DrawLine(topLeft, topRight); //top

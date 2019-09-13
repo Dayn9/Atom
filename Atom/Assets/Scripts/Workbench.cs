@@ -23,8 +23,9 @@ public class Workbench : MonoBehaviour
         }
     }
 
-    private void Start()
+    public void NewProton()
     {
-       
+        GameObject proton = Instantiate(ProtonPrefab, transform.GetChild(0));
+        proton.transform.localPosition = Vector3.zero;
     }
 }
