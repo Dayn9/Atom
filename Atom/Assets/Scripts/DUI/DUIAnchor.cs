@@ -7,6 +7,10 @@ namespace DUI
 {
     public class DUIAnchor : MonoBehaviour
     {
+        /// <summary>
+        /// Anchors the UI element based on min and max proportion of the parent Anchor
+        /// </summary>
+
         [SerializeField] private Vector2 min;
         [SerializeField] private Vector2 max;
 
@@ -17,10 +21,41 @@ namespace DUI
 
         private void Start()
         {
+            //parent node starts the recursive call using the full camera space as bounds
             if (transform.parent.GetComponent<DUIAnchor>() == null)
             {
                 SetPosition(new Bounds(Vector2.zero, new Vector2(DUI.cameraWidth, DUI.cameraHeight) * 2));
-                foreach (DUIAnchor duia in GetComponentsInChildren<DUIAnchor>(true))
+            }
+        }
+
+        /// <summary>
+        /// sets the anchor bounds based on parent bounds
+        /// </summary>
+        /// <param name="r">parent bounds</param>
+        public void SetPosition(Bounds r)
+        {
+
+            //calculate new bounds based on the min and max proportions
+            bounds = new Bounds(new Vector2(r.center.x + ((max.x + min.x - 1) / 2) * r.size.x,
+                                             r.center.y + ((max.y + min.y - 1) / 2) * r.size.y),
+                                new Vector2(r.size.x * Mathf.Abs(max.x - min.x),
+                                             r.size.y * Mathf.Abs(max.y - min.y)));
+            
+            //move to the new center position
+            transform.position = bounds.center;
+
+            //scale any UI sprites to match the bounds
+            SpriteRenderer render = GetComponent<SpriteRenderer>();
+            if (render != null)
+            {
+                render.size = bounds.size;
+            }
+
+            //recursively call set position on any child objects
+            DUIAnchor[] duias = GetComponentsInChildren<DUIAnchor>(true);
+            if (duias.Length > 1) //check for >1 because method gets own anchor 
+            {
+                foreach (DUIAnchor duia in duias)
                 {
                     if (duia != this)
                         duia.SetPosition(bounds);
@@ -28,22 +63,11 @@ namespace DUI
             }
         }
 
-        public void SetPosition(Bounds r)
-        {
-
-            bounds = new Bounds(new Vector2(r.center.x + ((max.x + min.x - 1) / 2) * r.size.x,
-                                             r.center.y + ((max.y + min.y - 1) / 2) * r.size.y),
-                                new Vector2(r.size.x * Mathf.Abs(max.x - min.x),
-                                             r.size.y * Mathf.Abs(max.y - min.y)));
-            transform.position = bounds.center;
-
-            SpriteRenderer render = GetComponent<SpriteRenderer>();
-            if (render != null)
-            {
-                render.size = bounds.size;
-            }
-        }
-
+        /// <summary>
+        /// Set the new bounds
+        /// </summary>
+        /// <param name="min">bottom left proportion</param>
+        /// <param name="max">top right proportion</param>
         public void SetMinMax(Vector2 min, Vector2 max)
         {
             this.min = min;
@@ -51,49 +75,12 @@ namespace DUI
         }
 
         /// <summary>
-        /// draw a green collider based on area
+        /// draw a cyan collider based on bounds
         /// </summary>
         protected void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.cyan;
-
-            Vector2 center = bounds.center;
-
-            Vector2 topLeft = new Vector2(center.x - bounds.extents.x, center.y + bounds.extents.y);
-            Vector2 topRight = new Vector2(center.x + bounds.extents.x, center.y + bounds.extents.y);
-            Vector2 bottomLeft = new Vector2(center.x - bounds.extents.x, center.y - bounds.extents.y);
-            Vector2 bottomRight = new Vector2(center.x + bounds.extents.x, center.y - bounds.extents.y);
-
-            //draw lines between corners
-            Gizmos.DrawLine(topLeft, topRight); //top
-            Gizmos.DrawLine(topRight, bottomRight); //right
-            Gizmos.DrawLine(bottomRight, bottomLeft); //bottom
-            Gizmos.DrawLine(bottomLeft, topLeft); //left
-        }
-    }
-
-
-    [CustomEditor(typeof(DUIAnchor))]
-    [CanEditMultipleObjects]
-    public class DUIAnchorEditor : Editor
-    {
-        SerializedProperty min;
-        SerializedProperty max;
-
-        private void OnEnable()
-        {
-            min = serializedObject.FindProperty("min");
-            max = serializedObject.FindProperty("max");
-        }
-
-        public override void OnInspectorGUI()
-        {
-            serializedObject.Update();
-
-            min.vector2Value = EditorGUILayout.Vector2Field("min", min.vector2Value);
-            max.vector2Value = EditorGUILayout.Vector2Field("max", max.vector2Value);
-
-            serializedObject.ApplyModifiedProperties();
+            Gizmos.DrawWireCube(bounds.center, bounds.size);
         }
     }
 }

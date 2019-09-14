@@ -1,20 +1,21 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace DUI
 {
     public class DUI : MonoBehaviour
     {
-        private Camera cam;
+        /// <summary>
+        /// handles the global DUI variables
+        /// </summary>
 
-        public static float cameraHeight;
-        public static float cameraWidth;
+        public static float cameraHeight; //height of the screen in Unity units
+        public static float cameraWidth; //width of the screen in Unity Units 
 
-        public static Vector2 mousePos;
+        public static Vector2 mousePos; //position of the mouse in Unity Units
 
         private void Awake()
         {
-            cam = Camera.main;
+            Camera cam = Camera.main;
 
             //Orthographic setup
             if (cam.orthographic)
@@ -33,6 +34,7 @@ namespace DUI
 
         private void Update()
         {
+            //only need to calculate mouse position once
             mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
 

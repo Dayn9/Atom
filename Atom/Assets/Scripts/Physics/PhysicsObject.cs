@@ -6,11 +6,15 @@ namespace Physics
 {
     public class PhysicsObject : MonoBehaviour
     {
-        //TODO make get porpertys and method for apply forces so that these are hidden
-        public Vector3 position;
-        public Vector3 velocity;
+        /// <summary>
+        /// Handles basic physics calculations
+        /// </summary>
 
-        [SerializeField] [Range(0, 1)] private float drag;
+        //TODO make get porpertys and method for apply forces so that these are hidden
+        public Vector3 position; //current postion of the object
+        public Vector3 velocity; //current velocity of the object
+
+        [SerializeField] [Range(0, 1)] private float drag; //amout to slow velocity by every update
 
         private void Start()
         {
@@ -19,12 +23,16 @@ namespace Physics
 
         private void FixedUpdate()
         {
+            //get the current position
             position = transform.position;
 
+            //move by velocity
             position += velocity * Time.deltaTime;
 
+            //apply to transform
             transform.position = position;
 
+            //apply drag
             velocity *= 1 - drag;
         }
     }
