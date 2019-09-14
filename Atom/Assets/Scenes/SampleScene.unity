@@ -263,7 +263,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   particleSpeed: 1
-  rotationSpeed: 10
+  rotationSpeed: 30
 --- !u!1 &526038079
 GameObject:
   m_ObjectHideFlags: 0
@@ -348,6 +348,67 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!1 &557103013
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 557103014}
+  - component: {fileID: 557103016}
+  - component: {fileID: 557103015}
+  m_Layer: 0
+  m_Name: OrbitX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &557103014
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 557103013}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1571422795}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &557103015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 557103013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc09e634b809df2438987bd995883906, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  min: {x: 0, y: 0}
+  max: {x: 1, y: 1}
+--- !u!114 &557103016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 557103013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10de4ad80969b6546aa739d2465ad09c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 0
+  particleSpeed: 1
+  orbitSpeed: 0.2
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -421,7 +482,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 4e-45}
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 2.75508e-40, w: -1.14e-43}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -712,8 +773,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc09e634b809df2438987bd995883906, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  min: {x: 0.8, y: 0.1}
-  max: {x: 1, y: 0.9}
+  min: {x: 0.8, y: 0.5}
+  max: {x: 1, y: 1}
 --- !u!114 &1514291370
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -762,6 +823,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 159191777}
+  - {fileID: 557103014}
   m_Father: {fileID: 777438007}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -777,6 +839,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df47bfdd16b83074c8cc0cdf137a298b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shellTemplate: {fileID: 557103013}
+  TEMPr1: 2
+  spacing: 1
 --- !u!114 &1571422797
 MonoBehaviour:
   m_ObjectHideFlags: 0

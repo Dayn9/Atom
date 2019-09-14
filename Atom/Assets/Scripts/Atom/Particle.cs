@@ -12,7 +12,7 @@ namespace Atom
         /// </summary>
 
         protected float mass;
-        protected byte charge = 0;
+        protected sbyte charge = 0;
 
         protected bool selected = false; //true when the particle is currently selected
 
