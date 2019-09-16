@@ -11,10 +11,15 @@ namespace Atom
 
         private List<Particle> particles;
 
+        private int protonCount = 0;
+        private int neutronCount = 0;
+
+        public int ProtonCount { get { return protonCount; } }
+        public int NeutronCount { get { return neutronCount; } }
+
         private void Awake()
         {
             particles = new List<Particle>();
-
         }
 
         /// <summary>
@@ -25,8 +30,19 @@ namespace Atom
         public bool AddParticle(Particle particle)
         {
             //check type of particle
-            if(particle.GetType().Equals(typeof(Proton)) || particle.GetType().Equals(typeof(Neutron)))
+            if (particle.GetType().Equals(typeof(Proton)) && protonCount < 18)
             {
+                protonCount++;
+
+                //add the particle and set the parent
+                particles.Add(particle);
+                particle.transform.SetParent(transform);
+                return true;
+            }
+            else if (particle.GetType().Equals(typeof(Neutron)) && neutronCount < 20)
+            {
+                neutronCount++;
+
                 //add the particle and set the parent
                 particles.Add(particle);
                 particle.transform.SetParent(transform);
@@ -42,7 +58,7 @@ namespace Atom
         }
 
         private void FixedUpdate()
-        {        
+        {
             foreach (Particle particle in particles)
             {
                 //find the distance from origin

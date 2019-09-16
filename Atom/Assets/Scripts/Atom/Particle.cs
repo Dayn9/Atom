@@ -53,7 +53,7 @@ namespace Atom
             if (selected)
             {
                 //move to mouse position when selected
-                transform.position = (Vector3)DUI.DUI.mousePos + Vector3.back;
+                transform.position = (Vector3)DUI.DUI.inputPos + Vector3.back;
 
                 //call deselect when mouse released
                 if (Input.GetMouseButtonUp(0))
@@ -70,6 +70,8 @@ namespace Atom
 
         protected void Deselect()
         {
+
+            physicsObj.velocity = (DUI.DUI.inputPos - DUI.DUI.inputPosPrev) * 2;
             selected = false;
         }
 

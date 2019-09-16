@@ -16,9 +16,19 @@ namespace Atom
 
         public Nucleus Nucleus { get { return nucleus; } }
         public Shell OuterShell { get { return shells.Peek(); } }
+        public int ElectronCount
+        {
+            get
+            {
+                int e = 0;
+                foreach (Shell shell in shells)
+                    e += shell.ElectronCount;
+                return e;
+            }
+        }
 
         [SerializeField] private GameObject shellTemplate;
-        [SerializeField] private float TEMPr1; //TODO calculate based on nucleus radius
+        [SerializeField] private float nucleusRadius;
         [SerializeField] private float spacing;
 
         private void Awake()
@@ -32,7 +42,7 @@ namespace Atom
         private void Update()
         {
             //check if the outermost shell is full
-            if (OuterShell.Full)
+            if (OuterShell.Full && shells.Count < 3)
             {
                 AddShell();
             }
@@ -47,7 +57,7 @@ namespace Atom
 
             //add the new shell to the stack
             Shell shell = obj.GetComponent<Shell>();
-            shell.radius = (shells.Count * spacing) + TEMPr1;
+            shell.radius = (shells.Count * spacing) + nucleusRadius;
             shell.MaxParticles = shells.Count == 0 ? 2 : 8;
             shells.Push(shell);
         }

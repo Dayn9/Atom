@@ -23,10 +23,10 @@ public class Workbench : MonoBehaviour
             proton.transform.localPosition = Vector3.zero;
 
             GameObject neutron = Instantiate(NeutronPrefab, transform.GetChild(1));
-            proton.transform.localPosition = Vector3.zero;
+            neutron.transform.localPosition = Vector3.zero;
 
             GameObject electron = Instantiate(ElectronPrefab, transform.GetChild(2));
-            proton.transform.localPosition = Vector3.zero;
+            electron.transform.localPosition = Vector3.zero;
         }
     }
 

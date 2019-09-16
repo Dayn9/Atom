@@ -11,7 +11,8 @@ namespace DUI
         public static float cameraHeight; //height of the screen in Unity units
         public static float cameraWidth; //width of the screen in Unity Units 
 
-        public static Vector2 mousePos; //position of the mouse in Unity Units
+        public static Vector2 inputPos; //position of the mouse or touch in Unity Unitys
+        public static Vector2 inputPosPrev; //position of the mouse or touch in Unity Units last frame
 
         private void Awake()
         {
@@ -34,8 +35,14 @@ namespace DUI
 
         private void Update()
         {
+            inputPosPrev = inputPos;
+
             //only need to calculate mouse position once
-            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+#if UNITY_EDITOR || UNITY_STANDALONE
+            inputPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+#elif UNITY_ANDROID || UNITY_IOS
+            inputPos = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
+#endif  
         }
 
     }

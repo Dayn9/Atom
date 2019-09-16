@@ -15,7 +15,7 @@ namespace DUI
         private DUIAnchor anchor; //ref to spriteRenderer component
 
         private bool active = true; //true when the button is able to be clicked 
-        private bool mouseOver = false; //true when the mouse is over bounds
+        private bool wasOver = false; //true when the mouse is over bounds
 
         public UnityEvent OnEnter; //called when the mouse enters bounds
         public UnityEvent OnClick; //called when the mouse clicks while in bounds
@@ -32,28 +32,49 @@ namespace DUI
         protected virtual void Update()
         {
             //only check for events when active
+
+#if UNITY_EDITOR || UNITY_STANDALONE
             if (active)
             {
-                bool over = anchor.Bounds.Contains(DUI.mousePos);
-
+                bool over = anchor.Bounds.Contains(DUI.inputPos);
                 //call enter when mouse is first over
-                if (!mouseOver && over)
+                if (!wasOver && over)
                 {
                     OnEnter?.Invoke();
                 }
                 //call exit when mouse first leaves
-                else if (mouseOver && !over)
+                else if (wasOver && !over)
                 {
                     OnExit?.Invoke();
                 }
                 //call click when over and mouse down
-                if (mouseOver && Input.GetMouseButtonDown(0))
+                if (wasOver && Input.GetMouseButtonDown(0))
                 {
                     OnClick?.Invoke();
                 }
+#elif UNITY_ANDROID || UNITY_IOS
+            if (active && Input.touchCount == 1)
+            {
+                Touch touch = Input.GetTouch(0);
+                bool over = anchor.Bounds.Contains(DUI.inputPos);
+                //call enter when mouse is first over
+                if (!wasOver && over)
+                {
+                    OnEnter?.Invoke();
+                }
+                //call exit when mouse first leaves
+                else if (wasOver && (!over || touch.phase == TouchPhase.Ended))
+                {
+                    OnExit?.Invoke();
+                }
+                if (wasOver && touch.phase == TouchPhase.Began)
+                {
+                    OnClick?.Invoke();
+                }
+#endif
             }
             //call exit if disabled with mouse over
-            else if (mouseOver)
+            else if (wasOver)
             {
                 OnExit?.Invoke();
             }
@@ -61,12 +82,12 @@ namespace DUI
 
         private void Enter()
         {
-            mouseOver = true;
+            wasOver = true;
         }
 
         private void Exit()
         {
-            mouseOver = false;
+            wasOver = false;
         }
     }
 }

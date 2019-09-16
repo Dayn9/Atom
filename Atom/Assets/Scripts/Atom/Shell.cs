@@ -17,6 +17,8 @@ namespace Atom
 
         private float seperationDistance;
 
+        public int ElectronCount { get { return particles.Count; } }
+
         public int MaxParticles { set { maxParticles = value; } }
         public bool Full
         {
@@ -35,7 +37,7 @@ namespace Atom
 
         public bool AddParticle(Particle particle)
         {
-            if (particle.GetType().Equals(typeof(Electron)))
+            if (particle.GetType().Equals(typeof(Electron)) && !Full)
             {
                 particles.Add(particle);
                 particle.transform.SetParent(transform);
@@ -53,9 +55,9 @@ namespace Atom
             {
                 Vector3 diffRadius = transform.position - particle.PhysicsObj.position;
                 
-                Vector3 forceToRadius = diffRadius.normalized * (diffRadius.sqrMagnitude - radius * radius) * particleSpeed;
+                Vector2 forceToRadius = diffRadius.normalized * (diffRadius.magnitude - radius) * particleSpeed;
 
-                Vector3 forceToOrbit = new Vector2(-diffRadius.y, diffRadius.x).normalized * orbitSpeed;
+                Vector2 forceToOrbit = new Vector2(-diffRadius.y, diffRadius.x).normalized * orbitSpeed;
 
                 //calculate the force to seperate
                 Vector2 forceToSeperate = Vector3.zero;
@@ -78,7 +80,7 @@ namespace Atom
                 }
 
                 //apply forces to the particles
-                particle.PhysicsObj.velocity += forceToRadius + forceToOrbit + (Vector3) forceToSeperate;
+                particle.PhysicsObj.velocity += (Vector3)(forceToRadius + forceToOrbit + forceToSeperate);
             }
         }
 
