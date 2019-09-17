@@ -8,12 +8,23 @@ namespace Atom
     {
         protected override void Awake()
         {
-            base.Awake();
             mass = 1;
             charge = 0;
             Radius = 0.5f;
 
-            OnDeselect.AddListener(DropParticle);
+            base.Awake();
+        }
+
+        protected override void PickUpParticle()
+        {
+            if (atom.Nucleus.RemoveParticle(this))
+            {
+                Debug.Log("Neutron Removed");
+            }
+            else
+            {
+                
+            }
         }
 
         protected override void DropParticle()

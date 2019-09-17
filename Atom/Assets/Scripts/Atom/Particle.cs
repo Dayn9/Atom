@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 using Physics;
+using DUI;
 
 namespace Atom
 {
     [RequireComponent(typeof(PhysicsObject))]
+    [RequireComponent(typeof(DUISphereButton))]
     public abstract class Particle : MonoBehaviour
     {
         /// <summary>
@@ -22,6 +24,7 @@ namespace Atom
         protected static Atom atom; //static ref to the Atom
 
         private PhysicsObject physicsObj;
+        private DUISphereButton sphereButton;
 
         //get and set the radius in Unity Units
         public float Radius {
@@ -34,6 +37,9 @@ namespace Atom
         protected virtual void Awake()
         {
             physicsObj = GetComponent<PhysicsObject>();
+            sphereButton = GetComponent<DUISphereButton>();
+
+            sphereButton.Radius = Radius;
 
             if(atom == null)
             {
@@ -44,6 +50,7 @@ namespace Atom
                 }
             }
 
+            sphereButton.OnClick.AddListener(Select);
             OnSelect.AddListener(Select);
             OnDeselect.AddListener(Deselect);
         }
@@ -65,13 +72,16 @@ namespace Atom
 
         protected void Select()
         {
+            PickUpParticle();
+
             selected = true;
         }
 
         protected void Deselect()
         {
+            DropParticle();
 
-            physicsObj.velocity = (DUI.DUI.inputPos - DUI.DUI.inputPosPrev) * 2;
+            //physicsObj.velocity = (DUI.DUI.inputPos - DUI.DUI.inputPosPrev) * 2;
             selected = false;
         }
 
@@ -79,6 +89,8 @@ namespace Atom
         /// Behavior for when the particle is dropped into the atom
         /// </summary>
         protected virtual void DropParticle() { }
+
+        protected virtual void PickUpParticle() { }
 
     }
 }

@@ -51,6 +51,30 @@ namespace Atom
             return false;
         }
 
+        public bool RemoveParticle(Particle particle)
+        {
+            //check type of particle
+            if (particle.GetType().Equals(typeof(Proton)) && particles.Contains(particle))
+            {
+                protonCount--;
+
+                //add the particle and set the parent
+                particles.Remove(particle);
+                particle.transform.SetParent(null);
+                return true;
+            }
+            else if (particle.GetType().Equals(typeof(Neutron)) && particles.Contains(particle))
+            {
+                neutronCount--;
+
+                //add the particle and set the parent
+                particles.Remove(particle);
+                particle.transform.SetParent(null);
+                return true;
+            }
+            return false;
+        } 
+
         void Update()
         {
             //slowly spin the nucleus

@@ -640,7 +640,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 4.7428895e+30, y: 3221.3298, z: 11165.117, w: 4.079108e+12}
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -1183,6 +1183,12 @@ MonoBehaviour:
   NeutronPrefab: {fileID: 4897893899562432815, guid: 117bfa51519fa264b97acffa19831c21,
     type: 3}
   ElectronPrefab: {fileID: 1224171826986411744, guid: 849394ef25dcfb54ea16f1287ccbddf6,
+    type: 3}
+  ProtonMarker: {fileID: 3965595725863801107, guid: c07dd431d43703944ab4d97083fffdd8,
+    type: 3}
+  NeutronMarker: {fileID: 6297887613777241037, guid: 116ee691b5a9ffc4290581a416ac4a57,
+    type: 3}
+  ElectronMarker: {fileID: 6472699211717920609, guid: aad16ad8d6a8c7c409e9689a17d30966,
     type: 3}
 --- !u!1 &1571422794
 GameObject:

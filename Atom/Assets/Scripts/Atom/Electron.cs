@@ -12,8 +12,11 @@ namespace Atom
             mass = 0.01f;
             charge = -1;
             Radius = 0.25f;
+        }
 
-            OnDeselect.AddListener(DropParticle);
+        protected override void PickUpParticle()
+        {
+            Debug.Log("Electron Removed");
         }
 
         protected override void DropParticle()

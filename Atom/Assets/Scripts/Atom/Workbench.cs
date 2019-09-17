@@ -10,6 +10,10 @@ public class Workbench : MonoBehaviour
     [SerializeField] private GameObject ProtonPrefab;
     [SerializeField] private GameObject NeutronPrefab;
     [SerializeField] private GameObject ElectronPrefab;
+    [Space(5)]
+    [SerializeField] private GameObject ProtonMarker;
+    [SerializeField] private GameObject NeutronMarker;
+    [SerializeField] private GameObject ElectronMarker;
 
     private Atom.Atom atom;
 
@@ -19,13 +23,13 @@ public class Workbench : MonoBehaviour
         //make sure there are at least 3 children
         if (transform.childCount >= 3)
         {
-            GameObject proton = Instantiate(ProtonPrefab, transform.GetChild(0));
+            GameObject proton = Instantiate(ProtonMarker, transform.GetChild(0));
             proton.transform.localPosition = Vector3.zero;
 
-            GameObject neutron = Instantiate(NeutronPrefab, transform.GetChild(1));
+            GameObject neutron = Instantiate(NeutronMarker, transform.GetChild(1));
             neutron.transform.localPosition = Vector3.zero;
 
-            GameObject electron = Instantiate(ElectronPrefab, transform.GetChild(2));
+            GameObject electron = Instantiate(ElectronMarker, transform.GetChild(2));
             electron.transform.localPosition = Vector3.zero;
         }
     }
