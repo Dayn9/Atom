@@ -6,10 +6,12 @@ namespace Atom
 {
     public class Neutron : Particle
     {
+        /// <summary>
+        /// Handles the bahavior of neutron particles in atom
+        /// </summary>
+
         protected override void Awake()
         {
-            mass = 1;
-            charge = 0;
             Radius = 0.5f;
 
             base.Awake();
@@ -17,6 +19,7 @@ namespace Atom
 
         protected override void PickUpParticle()
         {
+            //check the neutron is part of the atom and can be removed
             if (inAtom && atom.Nucleus.RemoveParticle(this))
             {
                 base.PickUpParticle();
@@ -30,11 +33,13 @@ namespace Atom
 
         protected override void DropParticle()
         {
+            //check not already part of atom, within atom bounds, and can actually be added
             if (!inAtom && atom.Contains(transform.position) && atom.Nucleus.AddParticle(this))
             {
                 base.DropParticle();
                 Debug.Log("Nutron Added");
             }
+            //neutron out of bounds or could not be added
             else
             {
                 Destroy(gameObject);

@@ -13,20 +13,16 @@ namespace Atom
         /// Parent class for Protons, Neutrons, Electorns
         /// </summary>
 
-        protected float mass;
-        protected sbyte charge = 0;
+        private PhysicsObject physicsObj; //ref to attached physics object
+        private DUISphereButton sphereButton; //ref to attached DUI sphere collider 
 
+        protected bool inAtom = false; //internally true when part of the atom
         protected bool selected = false; //true when the particle is currently selected
 
         public UnityEvent OnSelect; //called when the particle is first selected 
         public UnityEvent OnDeselect; //called when the particle is released from selection
 
         protected static Atom atom; //static ref to the Atom
-
-        private PhysicsObject physicsObj;
-        private DUISphereButton sphereButton;
-
-        protected bool inAtom = false;
 
         //get and set the radius in Unity Units
         public float Radius {
@@ -38,11 +34,14 @@ namespace Atom
 
         protected virtual void Awake()
         {
+            //find components
             physicsObj = GetComponent<PhysicsObject>();
             sphereButton = GetComponent<DUISphereButton>();
 
+            //set spherebutton to have same radius as particle
             sphereButton.Radius = Radius;
 
+            //get the satic reference to the atom
             if(atom == null)
             {
                 atom = FindObjectOfType<Atom>();
@@ -52,6 +51,7 @@ namespace Atom
                 }
             }
 
+            //hook up events 
             sphereButton.OnClick.AddListener(Select);
             OnSelect.AddListener(Select);
             OnDeselect.AddListener(Deselect);
@@ -59,12 +59,13 @@ namespace Atom
 
         protected virtual void Update()
         {
+            //behavior when particle is selected by the user
             if (selected)
             {
-                //move to mouse position when selected
+                //move to mouse position 
                 transform.position = (Vector3)DUI.DUI.inputPos + Vector3.back;
 
-                //call deselect when mouse released
+                //call deselect when intut released
                 if (Input.GetMouseButtonUp(0))
                 {
                     OnDeselect?.Invoke();
@@ -74,6 +75,7 @@ namespace Atom
 
         protected void Select()
         {
+            //run the pickup particle behavior
             PickUpParticle();
 
             selected = true;
@@ -81,6 +83,7 @@ namespace Atom
 
         protected void Deselect()
         {
+            //run the drop particle behavior
             DropParticle();
 
             //physicsObj.velocity = (DUI.DUI.inputPos - DUI.DUI.inputPosPrev) * 2;
@@ -95,6 +98,9 @@ namespace Atom
             inAtom = true;
         }
 
+        /// <summary>
+        /// Behavior for when the particle is picked up out of the atom
+        /// </summary>
         protected virtual void PickUpParticle()
         {
             inAtom = false;

@@ -6,13 +6,17 @@ namespace Atom
 {
     public class Nucleus : MonoBehaviour
     {
-        [SerializeField] private float particleSpeed;
-        [SerializeField] private float rotationSpeed;
+        /// <summary>
+        /// Handles the behavior of Atom's nucleus
+        /// </summary>
 
-        private List<Particle> particles;
+        [SerializeField] private float particleSpeed; //magnitude of force to center
+        [SerializeField] private float rotationSpeed; //degees to spin 
 
-        private int protonCount = 0;
-        private int neutronCount = 0;
+        private List<Particle> particles; //list of all particles in nucleus
+
+        private int protonCount = 0; //number of protons in nucleus
+        private int neutronCount = 0; //number of neutrons in nucleus
 
         public int ProtonCount { get { return protonCount; } }
         public int NeutronCount { get { return neutronCount; } }
@@ -51,6 +55,11 @@ namespace Atom
             return false;
         }
 
+        /// <summary>
+        /// try and remove a particle from the nucleus
+        /// </summary>
+        /// <param name="particle">particle to remove</param>
+        /// <returns>removal suceess</returns>
         public bool RemoveParticle(Particle particle)
         {
             //check type of particle

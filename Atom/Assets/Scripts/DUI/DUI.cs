@@ -30,14 +30,17 @@ namespace DUI
                 cam.fieldOfView = 60;
                 cameraHeight = (transform.position.z - cam.transform.position.z) / Mathf.Sqrt(3);
             }
+
+            //calculate width based on height
             cameraWidth = cameraHeight * Screen.width / Screen.height;
         }
 
         private void Update()
         {
+            //set the previous input position
             inputPosPrev = inputPos;
 
-            //only need to calculate mouse position once
+            //only need to calculate input position once
 #if UNITY_EDITOR || UNITY_STANDALONE
             inputPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 #elif UNITY_ANDROID || UNITY_IOS

@@ -2,74 +2,90 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DUI;
-using Atom;
-
-[RequireComponent(typeof(DUIAnchor))]
-public class Workbench : MonoBehaviour
+namespace Atom
 {
-    [SerializeField] private GameObject ProtonPrefab;
-    [SerializeField] private GameObject NeutronPrefab;
-    [SerializeField] private GameObject ElectronPrefab;
-    [Space(5)]
-    [SerializeField] private GameObject ProtonMarker;
-    [SerializeField] private GameObject NeutronMarker;
-    [SerializeField] private GameObject ElectronMarker;
 
-    private Atom.Atom atom;
 
-    private void Awake()
+    [RequireComponent(typeof(DUIAnchor))]
+    public class Workbench : MonoBehaviour
     {
-        atom = FindObjectOfType<Atom.Atom>();
-        //make sure there are at least 3 children
-        if (transform.childCount >= 3)
+        /// <summary>
+        /// handles the 
+        /// </summary>
+
+        [SerializeField] private GameObject ProtonPrefab;
+        [SerializeField] private GameObject NeutronPrefab;
+        [SerializeField] private GameObject ElectronPrefab;
+        [Space(5)]
+        [SerializeField] private GameObject ProtonMarker;
+        [SerializeField] private GameObject NeutronMarker;
+        [SerializeField] private GameObject ElectronMarker;
+
+        private Atom atom;
+
+        private void Awake()
         {
-            GameObject proton = Instantiate(ProtonMarker, transform.GetChild(0));
-            proton.transform.localPosition = Vector3.zero;
+            atom = FindObjectOfType<Atom>();
+            //make sure there are at least 3 children
+            if (transform.childCount >= 3)
+            {
+                GameObject proton = Instantiate(ProtonMarker, transform.GetChild(0));
+                proton.transform.localPosition = Vector3.zero;
 
-            GameObject neutron = Instantiate(NeutronMarker, transform.GetChild(1));
-            neutron.transform.localPosition = Vector3.zero;
+                GameObject neutron = Instantiate(NeutronMarker, transform.GetChild(1));
+                neutron.transform.localPosition = Vector3.zero;
 
-            GameObject electron = Instantiate(ElectronMarker, transform.GetChild(2));
-            electron.transform.localPosition = Vector3.zero;
+                GameObject electron = Instantiate(ElectronMarker, transform.GetChild(2));
+                electron.transform.localPosition = Vector3.zero;
+            }
         }
-    }
 
-    public void NewProton()
-    {
-        Debug.Log("New Proton");
-
-        GameObject obj = Instantiate(ProtonPrefab, transform.GetChild(0));
-
-        Proton proton = obj.GetComponent<Proton>();
-        if (proton != null)
+        /// <summary>
+        /// create a new proton
+        /// </summary>
+        public void NewProton()
         {
-            proton.OnSelect?.Invoke();
+            Debug.Log("New Proton");
+
+            GameObject obj = Instantiate(ProtonPrefab, transform.GetChild(0));
+
+            Proton proton = obj.GetComponent<Proton>();
+            if (proton != null)
+            {
+                proton.OnSelect?.Invoke();
+            }
         }
-    }
 
-    public void NewNeutron()
-    {
-        Debug.Log("New Neutron");
-
-        GameObject obj = Instantiate(NeutronPrefab, transform.GetChild(1));
-
-        Neutron neutron = obj.GetComponent<Neutron>();
-        if (neutron != null)
+        /// <summary>
+        /// create a new neutron
+        /// </summary>
+        public void NewNeutron()
         {
-            neutron.OnSelect?.Invoke();
+            Debug.Log("New Neutron");
+
+            GameObject obj = Instantiate(NeutronPrefab, transform.GetChild(1));
+
+            Neutron neutron = obj.GetComponent<Neutron>();
+            if (neutron != null)
+            {
+                neutron.OnSelect?.Invoke();
+            }
         }
-    }
 
-    public void NewElectron()
-    {
-        Debug.Log("New Electron");
-
-        GameObject obj = Instantiate(ElectronPrefab, transform.GetChild(2));
-
-        Electron electron = obj.GetComponent<Electron>();
-        if (electron != null)
+        /// <summary>
+        /// create a new electron
+        /// </summary>
+        public void NewElectron()
         {
-            electron.OnSelect?.Invoke();
+            Debug.Log("New Electron");
+
+            GameObject obj = Instantiate(ElectronPrefab, transform.GetChild(2));
+
+            Electron electron = obj.GetComponent<Electron>();
+            if (electron != null)
+            {
+                electron.OnSelect?.Invoke();
+            }
         }
     }
 }
