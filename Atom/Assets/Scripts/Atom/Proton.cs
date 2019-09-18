@@ -17,8 +17,9 @@ namespace Atom
 
         protected override void PickUpParticle()
         {
-            if (atom.Nucleus.RemoveParticle(this))
+            if (inAtom && atom.Nucleus.RemoveParticle(this))
             {
+                base.PickUpParticle();
                 Debug.Log("Proton Removed");
             }
             else
@@ -30,8 +31,9 @@ namespace Atom
 
         protected override void DropParticle()
         {
-            if (atom.Nucleus.AddParticle(this))
+            if (!inAtom && atom.Contains(transform.position) && atom.Nucleus.AddParticle(this))
             {
+                base.DropParticle();
                 Debug.Log("Proton Added");
             }
             else

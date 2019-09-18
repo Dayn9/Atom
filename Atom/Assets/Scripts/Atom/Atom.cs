@@ -5,6 +5,7 @@ using DUI;
 
 namespace Atom
 {
+    [RequireComponent(typeof(DUIAnchor))]
     public class Atom : MonoBehaviour
     {
         /// <summary>
@@ -13,9 +14,11 @@ namespace Atom
 
         private Nucleus nucleus;
         private Stack<Shell> shells;
+        private DUIAnchor anchor;
 
         public Nucleus Nucleus { get { return nucleus; } }
         public Shell OuterShell { get { return shells.Peek(); } }
+
         public int ElectronCount
         {
             get
@@ -33,6 +36,7 @@ namespace Atom
 
         private void Awake()
         {
+            anchor = GetComponent<DUIAnchor>();
             nucleus = GetComponentInChildren<Nucleus>();
             shells = new Stack<Shell>();
 
@@ -48,6 +52,25 @@ namespace Atom
             }
         }
 
+        public bool Contains(Vector2 pos)
+        {
+            return anchor.Bounds.Contains(pos);
+        }
+
+        public bool RemoveElectron(Particle particle)
+        {
+            //remove the Outer shell if empty, next shell is now the Outer shell
+            if (OuterShell.Empty && OuterShell.NextShell != null)
+                RemoveShell();
+
+            return OuterShell.RemoveParticle(particle);
+        }
+
+        private void RemoveShell()
+        {
+            Destroy(shells.Pop().gameObject);
+        }
+
         private void AddShell()
         {
             //create a new shell object
@@ -58,9 +81,19 @@ namespace Atom
             //add the new shell to the stack
             Shell shell = obj.GetComponent<Shell>();
             shell.radius = (shells.Count * spacing) + nucleusRadius;
-            shell.MaxParticles = shells.Count == 0 ? 2 : 8;
+            if (shells.Count == 0)
+            {
+                shell.MaxParticles = 2;
+                shell.NextShell = null;
+            }
+            else
+            {
+                shell.MaxParticles = 8;
+                shell.NextShell = OuterShell;
+            }
             shells.Push(shell);
         }
+
     }
 }
 

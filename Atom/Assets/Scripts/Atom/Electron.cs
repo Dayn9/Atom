@@ -16,13 +16,18 @@ namespace Atom
 
         protected override void PickUpParticle()
         {
-            Debug.Log("Electron Removed");
+            if (inAtom && atom.RemoveElectron(this))
+            {
+                base.PickUpParticle();
+                Debug.Log("Electron Removed");
+            }
         }
 
         protected override void DropParticle()
         {
-            if (atom.OuterShell.AddParticle(this))
+            if (!inAtom && atom.Contains(transform.position) && atom.OuterShell.AddParticle(this))
             {
+                base.DropParticle();
                 Debug.Log("Electron Added");
             }
             else

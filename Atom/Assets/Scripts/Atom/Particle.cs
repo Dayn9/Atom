@@ -26,6 +26,8 @@ namespace Atom
         private PhysicsObject physicsObj;
         private DUISphereButton sphereButton;
 
+        protected bool inAtom = false;
+
         //get and set the radius in Unity Units
         public float Radius {
             get { return transform.localScale.x / 2; }
@@ -88,9 +90,15 @@ namespace Atom
         /// <summary>
         /// Behavior for when the particle is dropped into the atom
         /// </summary>
-        protected virtual void DropParticle() { }
+        protected virtual void DropParticle()
+        {
+            inAtom = true;
+        }
 
-        protected virtual void PickUpParticle() { }
+        protected virtual void PickUpParticle()
+        {
+            inAtom = false;
+        }
 
     }
 }

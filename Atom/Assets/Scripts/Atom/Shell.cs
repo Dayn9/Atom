@@ -7,10 +7,9 @@ namespace Atom
     public class Shell : MonoBehaviour
     {
         private List<Particle> particles;
-
         private int maxParticles;
-
         public float radius;
+        private Shell nextShell;
 
         [SerializeField] private float particleSpeed;
         [SerializeField] private float orbitSpeed;
@@ -18,6 +17,8 @@ namespace Atom
         private float seperationDistance;
 
         public int ElectronCount { get { return particles.Count; } }
+
+        public Shell NextShell { get { return nextShell; } set { nextShell = value; } }
 
         public int MaxParticles { set { maxParticles = value; } }
         public bool Full
@@ -29,6 +30,7 @@ namespace Atom
                 return particles.Count == maxParticles;
             }
         }
+        public bool Empty { get { return particles.Count == 0; } }
 
         private void Awake()
         {
@@ -45,6 +47,33 @@ namespace Atom
                 //calculate the new seperation distance
                 seperationDistance = SeperationDistance(particles.Count);
                 return true;
+            }
+            return false;
+        }
+
+        public bool RemoveParticle(Particle particle)
+        {
+            if (particle.GetType().Equals(typeof(Electron)) && particles.Contains(particle))
+            {
+                particles.Remove(particle);
+                particle.transform.SetParent(null);
+
+                //calculate the new seperation distance
+                seperationDistance = SeperationDistance(particles.Count);
+                return true;
+            }
+            else if (NextShell != null)
+            {
+                if (NextShell.RemoveParticle(particle))
+                {
+                    Particle transferParticle = particles[0];
+                    particles.Remove(transferParticle);
+                    NextShell.AddParticle(transferParticle);
+
+                    seperationDistance = SeperationDistance(particles.Count);
+                    return true;
+                }
+                return false;
             }
             return false;
         }
