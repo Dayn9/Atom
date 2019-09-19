@@ -16,10 +16,19 @@ namespace Atom
 
         private void Update()
         {
-            nameUI.text = Elements.GetName(atom.Nucleus.ProtonCount);
-            abbreviationUI.text = Elements.GetAbbreviation(atom.Nucleus.ProtonCount);
+            if(atom.Element != null)
+            {
+                nameUI.text = atom.Element.Name;
+                abbreviationUI.text = atom.Element.Abbreviation;
+            }
+            else
+            {
+                nameUI.text = "---";
+                abbreviationUI.text = "-";
+            }
+            
             atomicNumberUI.text = atom.Nucleus.ProtonCount.ToString();
-            massNumberUI.text = (atom.Nucleus.ProtonCount + atom.Nucleus.NeutronCount).ToString();
+            massNumberUI.text = (atom.Nucleus.Mass).ToString();
 
             int charge = atom.Nucleus.ProtonCount - atom.ElectronCount;
             if (charge > 0)

@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Physics;
 
 namespace Atom
 {
+    [RequireComponent(typeof(PhysicsObject))]
     public class Nucleus : MonoBehaviour
     {
         /// <summary>
@@ -15,15 +17,24 @@ namespace Atom
 
         private List<Particle> particles; //list of all particles in nucleus
 
-        private int protonCount = 0; //number of protons in nucleus
-        private int neutronCount = 0; //number of neutrons in nucleus
+        public int ProtonCount { get; private set; } = 0;
+        public int NeutronCount { get; private set; } = 0;
+        public int Mass { get { return ProtonCount + NeutronCount; } }
+        public bool Shake { private get; set; }
 
-        public int ProtonCount { get { return protonCount; } }
-        public int NeutronCount { get { return neutronCount; } }
+        private PhysicsObject physicsObject;
+        private Vector3 origin;
 
         private void Awake()
         {
+            physicsObject = GetComponent<PhysicsObject>();
+
             particles = new List<Particle>();
+        }
+
+        private void Start()
+        {
+            origin = transform.localPosition; 
         }
 
         /// <summary>
@@ -34,18 +45,18 @@ namespace Atom
         public bool AddParticle(Particle particle)
         {
             //check type of particle
-            if (particle.GetType().Equals(typeof(Proton)) && protonCount < 18)
+            if (particle.GetType().Equals(typeof(Proton)) && ProtonCount < 18)
             {
-                protonCount++;
+                ProtonCount++;
 
                 //add the particle and set the parent
                 particles.Add(particle);
                 particle.transform.SetParent(transform);
                 return true;
             }
-            else if (particle.GetType().Equals(typeof(Neutron)) && neutronCount < 20)
+            else if (particle.GetType().Equals(typeof(Neutron)) && NeutronCount < 35)
             {
-                neutronCount++;
+                NeutronCount++;
 
                 //add the particle and set the parent
                 particles.Add(particle);
@@ -65,7 +76,7 @@ namespace Atom
             //check type of particle
             if (particle.GetType().Equals(typeof(Proton)) && particles.Contains(particle))
             {
-                protonCount--;
+                ProtonCount--;
 
                 //add the particle and set the parent
                 particles.Remove(particle);
@@ -74,7 +85,7 @@ namespace Atom
             }
             else if (particle.GetType().Equals(typeof(Neutron)) && particles.Contains(particle))
             {
-                neutronCount--;
+                NeutronCount--;
 
                 //add the particle and set the parent
                 particles.Remove(particle);
@@ -92,6 +103,17 @@ namespace Atom
 
         private void FixedUpdate()
         {
+            Vector3 forceToOrigin = origin - transform.localPosition;
+            if (Shake)
+            {
+                Vector3 forceToShake = Random.insideUnitSphere;
+                physicsObject.velocity += forceToShake + forceToOrigin;
+            }
+            else
+            {
+                physicsObject.velocity += forceToOrigin;
+            }          
+
             foreach (Particle particle in particles)
             {
                 //find the distance from origin

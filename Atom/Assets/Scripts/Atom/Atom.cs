@@ -12,6 +12,10 @@ namespace Atom
         /// Controls the atom
         /// </summary>
 
+        [SerializeField] private GameObject shellTemplate;
+        [SerializeField] private float nucleusRadius; //TODO replace with actual calculation
+        [SerializeField] private float spacing; //spacing between electron shells 
+
         private Nucleus nucleus; //ref to the Atom's nucleus
         private Stack<Shell> shells; //stack of electron shells
         private DUIAnchor anchor; //ref to own DUI anchor
@@ -28,10 +32,8 @@ namespace Atom
                 return e;
             }
         }
-
-        [SerializeField] private GameObject shellTemplate;
-        [SerializeField] private float nucleusRadius; //TODO replace with actual calculation
-        [SerializeField] private float spacing; //spacing between electron shells 
+        public Element Element { get; private set; }
+        
 
         private void Awake()
         {
@@ -45,6 +47,20 @@ namespace Atom
 
         private void Update()
         {
+            Element = Elements.GetElement(Nucleus.ProtonCount);
+            if(Element != null)
+            {
+                Isotope isotope = Element.GetIsotope(Nucleus.Mass);
+                if(isotope != null)
+                {
+                    Nucleus.Shake = !isotope.Stable;
+                }
+                else
+                {
+                    Nucleus.Shake = false;
+                }
+            }            
+
             //check if the outermost shell is full
             if (OuterShell.Full && shells.Count < 3)
             {

@@ -9,11 +9,6 @@ namespace Atom
     [RequireComponent(typeof(DUISphereButton))]
     public abstract class Particle : MonoBehaviour
     {
-        /// <summary>
-        /// Parent class for Protons, Neutrons, Electorns
-        /// </summary>
-
-        private PhysicsObject physicsObj; //ref to attached physics object
         private DUISphereButton sphereButton; //ref to attached DUI sphere collider 
 
         protected bool inAtom = false; //internally true when part of the atom
@@ -30,16 +25,16 @@ namespace Atom
             set { transform.localScale = Vector3.one * 2 * value; }
         }
 
-        public PhysicsObject PhysicsObj { get { return physicsObj; } }
+        public PhysicsObject PhysicsObj { get; private set; }
 
         protected virtual void Awake()
         {
             //find components
-            physicsObj = GetComponent<PhysicsObject>();
+            PhysicsObj = GetComponent<PhysicsObject>();
             sphereButton = GetComponent<DUISphereButton>();
 
             //set spherebutton to have same radius as particle
-            sphereButton.Radius = Radius;
+            sphereButton.Radius = Mathf.Max(0.5f, Radius);
 
             //get the satic reference to the atom
             if(atom == null)
