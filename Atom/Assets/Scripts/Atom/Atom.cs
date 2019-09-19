@@ -15,12 +15,10 @@ namespace Atom
         [SerializeField] private GameObject shellTemplate;
         [SerializeField] private float nucleusRadius; //TODO replace with actual calculation
         [SerializeField] private float spacing; //spacing between electron shells 
-
-        private Nucleus nucleus; //ref to the Atom's nucleus
         private Stack<Shell> shells; //stack of electron shells
         private DUIAnchor anchor; //ref to own DUI anchor
 
-        public Nucleus Nucleus { get { return nucleus; } }
+        public Nucleus Nucleus { get; private set; }
         public Shell OuterShell { get { return shells.Peek(); } }
         public int ElectronCount
         {
@@ -38,7 +36,7 @@ namespace Atom
         private void Awake()
         {
             anchor = GetComponent<DUIAnchor>();
-            nucleus = GetComponentInChildren<Nucleus>();
+            Nucleus = GetComponentInChildren<Nucleus>();
             shells = new Stack<Shell>();
 
             //add the first shell

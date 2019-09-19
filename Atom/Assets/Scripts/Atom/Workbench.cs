@@ -26,6 +26,7 @@ namespace Atom
         private void Awake()
         {
             atom = FindObjectOfType<Atom>();
+
             //make sure there are at least 3 children
             if (transform.childCount >= 3)
             {
@@ -38,6 +39,11 @@ namespace Atom
                 GameObject electron = Instantiate(ElectronMarker, transform.GetChild(2));
                 electron.transform.localPosition = Vector3.zero;
             }
+        }
+
+        private void Start()
+        {
+            Instantiate(ProtonPrefab).GetComponent<Proton>().OnDeselect?.Invoke();
         }
 
         /// <summary>
