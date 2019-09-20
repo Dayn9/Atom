@@ -19,26 +19,44 @@ namespace DUI
 
         private void Awake()
         {
+            //parent node starts the recursive call using the full camera space as bounds
+            if (transform.parent.GetComponent<DUILayout>() == null)
+            {
+                SetAnchors();
+            }
+        }
+
+        public void SetAnchors()
+        {
             anchor = GetComponent<DUIAnchor>();
 
-            DUIAnchor[] duias = GetComponentsInChildren<DUIAnchor>();
+            List<DUIAnchor> duias = new List<DUIAnchor>();
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                duias.Add(transform.GetChild(i).GetComponent<DUIAnchor>());
+            }
+
 
             //calculate the offset between anchors
-            Vector2 offset = new Vector2(layout == DUILayoutType.Horizontal ? 1.0f / (duias.Length - 1) : 0,
-                                         layout == DUILayoutType.Vertical ? 1.0f / (duias.Length - 1) : 0);
+            Vector2 offset = new Vector2(layout == DUILayoutType.Horizontal ? 1.0f / (duias.Count) : 0,
+                                         layout == DUILayoutType.Vertical ? 1.0f / (duias.Count) : 0);
 
             //set the min and max of every anchor based on anchor
-            for (int i = 1; i < duias.Length; i++)
+            for (int i = 0; i < duias.Count; i++)
             {
                 switch (layout)
                 {
                     case DUILayoutType.Vertical:
-                        duias[i].SetMinMax(Vector2.up - (i - 1) * offset, Vector2.one - (i * offset));
+                        duias[i].SetMinMax(Vector2.up - (i * offset), Vector2.one - ((i + 1) * offset));
                         break;
                     case DUILayoutType.Horizontal:
-                        duias[i].SetMinMax((i - 1) * offset, (i * offset) + Vector2.up);
+                        duias[i].SetMinMax(i * offset, ((i + 1) * offset) + Vector2.up);
                         break;
                 }
+
+                DUILayout duil = duias[i].GetComponent<DUILayout>();
+                if (duil != null)
+                    duil.SetAnchors();
             }
         }
     }

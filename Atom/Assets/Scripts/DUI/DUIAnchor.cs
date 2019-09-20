@@ -40,7 +40,7 @@ namespace DUI
                                              r.center.y + ((max.y + min.y - 1) / 2) * r.size.y),
                                 new Vector2(r.size.x * Mathf.Abs(max.x - min.x),
                                              r.size.y * Mathf.Abs(max.y - min.y)));
-            
+
             //move to the new center position
             transform.position = bounds.center;
 
@@ -51,15 +51,16 @@ namespace DUI
                 render.size = bounds.size;
             }
 
+
             //recursively call set position on any child objects
-            DUIAnchor[] duias = GetComponentsInChildren<DUIAnchor>(true);
-            if (duias.Length > 1) //check for >1 because method gets own anchor 
+            List<DUIAnchor> duias = new List<DUIAnchor>();
+            for (int i = 0; i < transform.childCount; i++)
             {
-                foreach (DUIAnchor duia in duias)
-                {
-                    if (duia != this)
-                        duia.SetPosition(bounds);
-                }
+                duias.Add(transform.GetChild(i).GetComponent<DUIAnchor>());
+            }
+            foreach (DUIAnchor duia in duias)
+            {
+                duia.SetPosition(bounds);
             }
         }
 
