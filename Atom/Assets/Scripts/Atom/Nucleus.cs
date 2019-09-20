@@ -107,17 +107,17 @@ namespace Atom
             if (Shake)
             {
                 Vector3 forceToShake = Random.insideUnitSphere;
-                physicsObject.velocity += forceToShake + forceToOrigin;
+                physicsObject.AddForce(forceToShake + forceToOrigin);
             }
             else
             {
-                physicsObject.velocity += forceToOrigin;
+                physicsObject.AddForce(forceToOrigin);
             }          
 
             foreach (Particle particle in particles)
             {
                 //find the distance from origin
-                Vector3 diffOrgin = transform.position - particle.PhysicsObj.position;
+                Vector3 diffOrgin = transform.position - particle.PhysicsObj.Position;
                 //calculate the force to center ( clamp is used so particles slow near center
                 Vector3 forceToCenter = Vector3.ClampMagnitude(diffOrgin.normalized * particleSpeed, diffOrgin.magnitude);
 
@@ -129,7 +129,7 @@ namespace Atom
                     if (!particle.Equals(other))
                     {
                         //find the distance between particles
-                        Vector3 diffOther = particle.PhysicsObj.position - other.PhysicsObj.position;
+                        Vector3 diffOther = particle.PhysicsObj.Position - other.PhysicsObj.Position;
                         //calculate the amount of overlap
                         float overlap = diffOther.magnitude - particle.Radius - other.Radius;
                         //check if actually overlapping
@@ -141,7 +141,7 @@ namespace Atom
                     }
                 }
                 //apply forces to the particles
-                particle.PhysicsObj.velocity += forceToCenter + forceToSeperate;
+                particle.PhysicsObj.AddForce(forceToCenter + forceToSeperate);
             }
         }
     }

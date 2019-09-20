@@ -27,9 +27,8 @@ namespace Atom
             }
             else
             {
-
+                atom.RemoveExcessParticle(this);
             }
-            
         }
 
         protected override void DropParticle()
@@ -42,7 +41,7 @@ namespace Atom
             //proton out of bounds or could not be added
             else
             {
-                Destroy(gameObject);
+                atom.AddExcessParticle(this);
             }
         }
     }

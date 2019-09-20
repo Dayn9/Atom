@@ -35,6 +35,11 @@ namespace DUI
             cameraWidth = cameraHeight * Screen.width / Screen.height;
         }
 
+        public static bool Contains(Vector2 pos)
+        {
+            return Mathf.Abs(pos.x) < cameraWidth && Mathf.Abs(pos.y) < cameraHeight;
+        }
+
         private void Update()
         {
             //set the previous input position

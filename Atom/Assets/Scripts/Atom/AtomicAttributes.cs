@@ -23,8 +23,8 @@ namespace Atom
                 }
                 else
                 {
-                    formalNameUI.text = "";
-                    stableUI.text = "";
+                    formalNameUI.text = "Not Isotope";
+                    stableUI.text = "Radioactive";
                 }
             }
             else

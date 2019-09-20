@@ -24,6 +24,10 @@ namespace Atom
                 base.PickUpParticle();
                 Debug.Log("Electron Removed");
             }
+            else
+            {
+                atom.RemoveExcessParticle(this);
+            }
         }
 
         protected override void DropParticle()
@@ -37,7 +41,7 @@ namespace Atom
             //electron out of bounds or cound not be added 
             else
             {
-                Destroy(gameObject);
+                atom.AddExcessParticle(this);
             }
         }
     }

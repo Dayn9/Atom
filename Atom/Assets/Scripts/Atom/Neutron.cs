@@ -27,7 +27,7 @@ namespace Atom
             }
             else
             {
-                
+                atom.RemoveExcessParticle(this);
             }
         }
 
@@ -42,7 +42,7 @@ namespace Atom
             //neutron out of bounds or could not be added
             else
             {
-                Destroy(gameObject);
+                atom.AddExcessParticle(this);
             }
         }
     }

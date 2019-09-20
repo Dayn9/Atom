@@ -10,6 +10,7 @@ namespace Atom
     public abstract class Particle : MonoBehaviour
     {
         private DUISphereButton sphereButton; //ref to attached DUI sphere collider 
+        private const int releaseSpeed = 20;
 
         protected bool inAtom = false; //internally true when part of the atom
         protected bool selected = false; //true when the particle is currently selected
@@ -81,7 +82,7 @@ namespace Atom
             //run the drop particle behavior
             DropParticle();
 
-            //physicsObj.velocity = (DUI.DUI.inputPos - DUI.DUI.inputPosPrev) * 2;
+            PhysicsObj.AddForce((DUI.DUI.inputPos - DUI.DUI.inputPosPrev) * releaseSpeed);
             selected = false;
         }
 

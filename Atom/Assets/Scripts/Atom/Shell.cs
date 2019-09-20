@@ -89,7 +89,7 @@ namespace Atom
             foreach (Particle particle in particles)
             {
                 //calculate force to get into orbit
-                Vector3 diffRadius = transform.position - particle.PhysicsObj.position;
+                Vector3 diffRadius = transform.position - particle.PhysicsObj.Position;
                 Vector2 forceToRadius = diffRadius.normalized * (diffRadius.magnitude - radius) * particleSpeed;
 
                 //calculate force to maintain orbit
@@ -103,7 +103,7 @@ namespace Atom
                     if (!particle.Equals(other))
                     {
                         //find the distance between particles
-                        Vector2 diffOther = particle.PhysicsObj.position - other.PhysicsObj.position;
+                        Vector2 diffOther = particle.PhysicsObj.Position - other.PhysicsObj.Position;
                         //calculate the amount of overlap
                         float overlap = diffOther.magnitude - seperationDistance;
 
@@ -116,7 +116,7 @@ namespace Atom
                 }
 
                 //apply forces to the particles
-                particle.PhysicsObj.velocity += (Vector3)(forceToRadius + forceToOrbit + forceToSeperate);
+                particle.PhysicsObj.AddForce(forceToRadius + forceToOrbit + forceToSeperate);
             }
         }
 

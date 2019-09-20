@@ -23,12 +23,12 @@ namespace Atom
             }
             else
             {
-                nameUI.text = "---";
-                abbreviationUI.text = "-";
+                nameUI.text = "";
+                abbreviationUI.text = "";
             }
             
-            atomicNumberUI.text = atom.Nucleus.ProtonCount.ToString();
-            massNumberUI.text = (atom.Nucleus.Mass).ToString();
+            atomicNumberUI.text = atom.Nucleus.ProtonCount > 0 ? atom.Nucleus.ProtonCount.ToString() : "";
+            massNumberUI.text = atom.Nucleus.Mass > 0 ? atom.Nucleus.Mass.ToString() : "";
 
             int charge = atom.Nucleus.ProtonCount - atom.ElectronCount;
             if (charge > 0)
