@@ -13,6 +13,7 @@ namespace Atom
         /// </summary>
 
         [SerializeField] private GameObject shellTemplate;
+        [SerializeField] private Workbench workbench;
         [SerializeField] private float nucleusRadius; //TODO replace with actual calculation
         [SerializeField] private float spacing; //spacing between electron shells 
         [SerializeField] private float seperateSpeed; //speed particles fly away at
@@ -51,18 +52,53 @@ namespace Atom
         {
             //get the element
             Element = Elements.GetElement(Nucleus.ProtonCount);
-            //set nucleus shake based on Isotope stability
+            
             if(Element != null)
             {
+                //set nucleus shake based on Isotope stability
                 Isotope isotope = Element.GetIsotope(Nucleus.Mass);
                 Nucleus.Shake = isotope != null ? !isotope.Stable : true;
-            }            
 
+                //set the min and max isotope mass
+                Nucleus.MassMax = Element.MaxIsotope;
+                Nucleus.MassMin = Element.MinIsotope;
+
+                //Auto add Neutrons to make valid Isotope
+                if(Nucleus.Mass < Element.MinIsotope)
+                {
+                    workbench.NewAutoNeutron();
+                }
+
+                //Auto remove Neutrons to make valid Isotope
+                if(Nucleus.Mass > Element.MaxIsotope)
+                {
+                    Nucleus.TrimNeutrons();
+                }
+            }
+            else
+            {
+                Nucleus.MassMax = 0;
+                Nucleus.TrimNeutrons(); 
+            }
+
+            //add or remove shells to match proton count
+            if (shells.Count < Elements.GetShells(Nucleus.ProtonCount))
+            {
+                AddShell();
+            }
+            else if (shells.Count > Elements.GetShells(Nucleus.ProtonCount))
+            {
+                RemoveShell();
+            }
+            
+            //remove the outer shell when proton cout is less than noble gas index
+
+            /*
             //check if the outermost shell is full
             if (OuterShell.Full && shells.Count < 3)
             {
                 AddShell();
-            }
+            }*/
         }
 
         private void FixedUpdate()
@@ -123,9 +159,10 @@ namespace Atom
         /// <returns>removal scucess</returns>
         public bool RemoveElectron(Particle particle)
         {
+            /*
             //remove the Outer shell if empty, next shell is now the Outer shell
             if (OuterShell.Empty && OuterShell.NextShell != null)
-                RemoveShell();
+                RemoveShell();*/
 
             //start the recursive call to remove from outer shell
             return OuterShell.RemoveParticle(particle);
@@ -136,6 +173,14 @@ namespace Atom
         /// </summary>
         private void RemoveShell()
         {
+            //remove any particles in the outer shell
+            foreach(Particle particle in OuterShell.Particles)
+            {
+                OuterShell.RemoveParticle(particle);
+                AddExcessParticle(particle);
+            }
+
+            //destroy the shell object
             Destroy(shells.Pop().gameObject);
         }
 
@@ -144,6 +189,7 @@ namespace Atom
         /// </summary>
         private void AddShell()
         {
+                           
             //create a new shell object
             GameObject obj = Instantiate(shellTemplate, transform);
             obj.SetActive(true);
@@ -154,11 +200,20 @@ namespace Atom
 
             //set attributes based on shell layer
             shell.radius = (shells.Count * spacing) + nucleusRadius;
-            shell.MaxParticles = new int[] { 2, 8, 8 } [shells.Count];
+            shell.MaxParticles = Elements.electronsPerShell[shells.Count];
             shell.NextShell = shells.Count == 0 ? null : OuterShell;
 
             //push shell onto stack
             shells.Push(shell);
+
+            //fill the outer shell 
+            if (OuterShell.NextShell != null)
+            {
+                for (int i = OuterShell.NextShell.ElectronCount; i < OuterShell.NextShell.MaxParticles; i++)
+                {
+                    workbench.NewAutoElectron();
+                }
+            }
         }
 
     }

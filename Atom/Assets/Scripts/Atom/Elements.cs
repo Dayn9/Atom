@@ -6,6 +6,10 @@ namespace Atom
 {
     public static class Elements
     {
+        /// <summary>
+        /// Contains ALL the data about elements
+        /// </summary>
+
         private static Element[] elements = new Element[]
         {
             #region Period 1 elements
@@ -47,7 +51,6 @@ namespace Atom
                     new Isotope(11),
                     new Isotope(12)
                 }),
-
             new Element("Beryllium", "Be",
                 new Isotope[]{
                     new Isotope(5),
@@ -157,7 +160,7 @@ namespace Atom
                     new Isotope(30),
                     new Isotope(31)
                 }),
-            new Element("Neon", "He",
+            new Element("Neon", "Ne",
                 new Isotope[]{
                     new Isotope(16),
                     new Isotope(17),
@@ -399,6 +402,21 @@ namespace Atom
             }
             return null;
         }
+
+        public static int[] electronsPerShell = new int[] { 2, 8, 8 };
+
+        public static int GetShells(int protonCount)
+        {
+            if (protonCount == 0)
+                return 0;
+            if (protonCount <= 2)
+                return 1;
+            if (protonCount <= 2 + 8)
+                return 2;
+            if (protonCount <= 2 + 8 + 8)
+                return 3;
+            return 3;
+        }
     }
 
     public class Element
@@ -414,10 +432,13 @@ namespace Atom
             Isotopes = isotopes; 
         }
 
+        public int MaxIsotope { get { return Isotopes[Isotopes.Length - 1].Mass; } }
+        public int MinIsotope { get { return Isotopes[0].Mass; } }     
+
         public Isotope GetIsotope(int mass)
         {
             //make sure there is actually an Isotope
-            if (Isotopes != null && mass >= Isotopes[0].Mass && mass <= Isotopes[Isotopes.Length-1].Mass)
+            if (Isotopes != null && mass >= MinIsotope && mass <= MaxIsotope)
             {
                 //index = mass - smallest possible mass
                 return Isotopes[mass- Isotopes[0].Mass];

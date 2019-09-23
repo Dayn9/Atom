@@ -22,6 +22,9 @@ namespace Atom
         public int Mass { get { return ProtonCount + NeutronCount; } }
         public bool Shake { private get; set; }
 
+        public int MassMax { get; set; }
+        public int MassMin { get; set; }
+
         private PhysicsObject physicsObject;
         private Vector3 origin;
 
@@ -54,7 +57,7 @@ namespace Atom
                 particle.transform.SetParent(transform);
                 return true;
             }
-            else if (particle.GetType().Equals(typeof(Neutron)) && NeutronCount < 35)
+            else if (particle.GetType().Equals(typeof(Neutron)) && NeutronCount < MassMax - ProtonCount)
             {
                 NeutronCount++;
 
@@ -95,6 +98,23 @@ namespace Atom
             return false;
         } 
 
+        public void TrimNeutrons()
+        {
+            int diff = Mass - MassMax;
+            foreach(Particle particle in particles)
+            {
+                if (particle.GetType().Equals(typeof(Neutron)))
+                {
+                    RemoveParticle(particle);
+                    particle.OnDeselect?.Invoke();
+
+                    diff++;
+                    if (diff >= 0)
+                        return;
+                }              
+            }
+        }
+
         void Update()
         {
             //slowly spin the nucleus
@@ -130,13 +150,22 @@ namespace Atom
                     {
                         //find the distance between particles
                         Vector3 diffOther = particle.PhysicsObj.Position - other.PhysicsObj.Position;
-                        //calculate the amount of overlap
-                        float overlap = diffOther.magnitude - particle.Radius - other.Radius;
-                        //check if actually overlapping
-                        if (overlap < 0)
+                        
+                        //rare occurance, but seperate from identical other
+                        if (diffOther.sqrMagnitude < 0.01)
                         {
-                            //add force to seperate
-                            forceToSeperate -= diffOther.normalized * overlap;
+                            forceToSeperate = Random.insideUnitSphere;
+                        }
+                        else
+                        {
+                            //calculate the amount of overlap
+                            float overlap = diffOther.magnitude - particle.Radius - other.Radius;
+                            //check if actually overlapping
+                            if (overlap < 0)
+                            {
+                                //add force to seperate
+                                forceToSeperate -= diffOther.normalized * overlap;
+                            }
                         }
                     }
                 }

@@ -10,17 +10,17 @@ namespace Atom
         [SerializeField] private float orbitSpeed; //magnitude of orbital force
 
         private List<Particle> particles; //list of all the particles in this shell
-        private int maxParticles; //the maximum number of particles that can be in this shell
         private float seperationDistance; //how far apart each electron should be
-        private Shell nextShell; //ref to the next shell down
 
         public float radius; //desired orbital radius
 
         public int ElectronCount { get { return particles.Count; } }
-        public Shell NextShell { get { return nextShell; } set { nextShell = value; } }
-        public int MaxParticles { set { maxParticles = value; } }
-        public bool Full { get { return particles.Count == maxParticles; } }
-        public bool Empty { get { return particles.Count == 0; } }
+        public Shell NextShell { get; set; }
+        public int MaxParticles { get; set; }
+        public bool Full { get { return ElectronCount == MaxParticles; } }
+        public bool Empty { get { return ElectronCount == 0; } }
+        public Particle[] Particles { get { return particles.ToArray(); } }
+        
 
         private void Awake()
         {
@@ -34,8 +34,14 @@ namespace Atom
         /// <returns>true if sucessfully added</returns>
         public bool AddParticle(Particle particle)
         {
+
+
+            if(NextShell != null && !NextShell.Full)
+            {
+                return NextShell.AddParticle(particle);
+            }
             //make sure the particle is an electron and the shell is not full
-            if (particle.GetType().Equals(typeof(Electron)) && !Full)
+            else if (particle.GetType().Equals(typeof(Electron)) && !Full )
             {
                 //add the particle
                 particles.Add(particle);
@@ -71,15 +77,17 @@ namespace Atom
                 //recursively check if particle in next shell
                 if (NextShell.RemoveParticle(particle))
                 {
-                    //replace the removed partcicle with one from this shell
-                    Particle transferParticle = particles[0];
-                    particles.Remove(transferParticle);
-                    NextShell.AddParticle(transferParticle);
+                    if(particles.Count > 0)
+                    {
+                        //replace the removed partcicle with one from this shell
+                        Particle transferParticle = particles[0];
+                        particles.Remove(transferParticle);
+                        NextShell.AddParticle(transferParticle);
 
-                    seperationDistance = SeperationDistance(particles.Count);
+                        seperationDistance = SeperationDistance(particles.Count);
+                    }
                     return true;
                 }
-                return false;
             }
             return false;
         }
@@ -104,13 +112,22 @@ namespace Atom
                     {
                         //find the distance between particles
                         Vector2 diffOther = particle.PhysicsObj.Position - other.PhysicsObj.Position;
-                        //calculate the amount of overlap
-                        float overlap = diffOther.magnitude - seperationDistance;
 
-                        if(overlap < 0)
+                        //rare occurance, but seperate from identical other
+                        if (diffOther.sqrMagnitude < 0.01)
                         {
-                            //add force to seperate
-                            forceToSeperate -= diffOther.normalized * overlap;
+                            forceToSeperate = Random.insideUnitSphere;
+                        }
+                        else
+                        {
+                            //calculate the amount of overlap
+                            float overlap = diffOther.magnitude - seperationDistance;
+
+                            if (overlap < 0)
+                            {
+                                //add force to seperate
+                                forceToSeperate -= diffOther.normalized * overlap;
+                            }
                         }
                     }
                 }
@@ -121,7 +138,7 @@ namespace Atom
         }
 
         /// <summary>
-        /// calculates the distance between points when n points ar equally spaced on a circle
+        /// calculates the distance between points when n points are equally spaced on peremiter of circle
         /// </summary>
         /// <param name="n">number of points on circle</param>
         /// <returns>distance between points</returns>

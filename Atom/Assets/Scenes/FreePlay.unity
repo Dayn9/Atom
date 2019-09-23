@@ -900,7 +900,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0.6669922, y: 0.009765625, z: -0.013671875, w: -1}
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -1497,9 +1497,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shellTemplate: {fileID: 557103013}
+  workbench: {fileID: 1514291370}
   nucleusRadius: 2.2
   spacing: 1
-  seperateSpeed: 1
+  seperateSpeed: 0.5
 --- !u!114 &1571422797
 MonoBehaviour:
   m_ObjectHideFlags: 0

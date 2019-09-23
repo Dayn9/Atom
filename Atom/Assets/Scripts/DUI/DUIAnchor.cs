@@ -56,7 +56,9 @@ namespace DUI
             List<DUIAnchor> duias = new List<DUIAnchor>();
             for (int i = 0; i < transform.childCount; i++)
             {
-                duias.Add(transform.GetChild(i).GetComponent<DUIAnchor>());
+                DUIAnchor a = transform.GetChild(i).GetComponent<DUIAnchor>();
+                if(a != null)
+                    duias.Add(a);
             }
             foreach (DUIAnchor duia in duias)
             {

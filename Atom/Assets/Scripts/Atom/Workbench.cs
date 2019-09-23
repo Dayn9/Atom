@@ -43,9 +43,26 @@ namespace Atom
 
         private void Start()
         {
-            Instantiate(ProtonPrefab).GetComponent<Proton>().OnDeselect?.Invoke();
+            NewAutoProton();
         }
 
+        public void NewAutoProton()
+        {
+            Debug.Log("New Proton");
+            Instantiate(ProtonPrefab, transform.GetChild(0)).GetComponent<Proton>().OnDeselect?.Invoke();
+        }
+
+        public void NewAutoNeutron()
+        {
+            Debug.Log("New Neutron");
+            Instantiate(NeutronPrefab, transform.GetChild(1)).GetComponent<Neutron>().OnDeselect?.Invoke();
+        }
+
+        public void NewAutoElectron()
+        {
+            Debug.Log("New Electron");
+            Instantiate(ElectronPrefab, transform.GetChild(2)).GetComponent<Electron>().OnDeselect?.Invoke();
+        }
         /// <summary>
         /// create a new proton
         /// </summary>

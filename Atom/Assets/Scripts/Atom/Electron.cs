@@ -33,7 +33,7 @@ namespace Atom
         protected override void DropParticle()
         {
             //check not already part of atom, within atom bounds, and can actually be added
-            if (!inAtom && atom.Contains(transform.position) && atom.OuterShell.AddParticle(this))
+            if (!inAtom && (atom.Contains(transform.position) || (atom.OuterShell != null && !atom.OuterShell.NextShell.Full)) && atom.OuterShell.AddParticle(this))
             {
                 base.DropParticle();
                 Debug.Log("Electron Added");

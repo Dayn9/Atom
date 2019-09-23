@@ -34,7 +34,7 @@ namespace Atom
         protected override void DropParticle()
         {
             //check not already part of atom, within atom bounds, and can actually be added
-            if (!inAtom && atom.Contains(transform.position) && atom.Nucleus.AddParticle(this))
+            if (!inAtom && (atom.Contains(transform.position) || atom.Nucleus.Mass < atom.Nucleus.MassMin) && atom.Nucleus.AddParticle(this))
             {
                 base.DropParticle();
                 Debug.Log("Nutron Added");
