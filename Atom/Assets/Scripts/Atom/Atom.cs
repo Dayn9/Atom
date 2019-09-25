@@ -165,12 +165,15 @@ namespace Atom
             //destroy the shell object
             Destroy(shells.Pop().gameObject);
 
-            if (CalcRadius(shells.Count) < anchor.Bounds.extents.y - 0.5f)
+            if (shells.Count == 0)
+                return; //don't need to calculate radius of nothing
+            /*
+            if (CalcRadius(shells.Count, scale) < anchor.Bounds.extents.y - 0.5f)
             {
                 //calculate the new scale to match bounds radius (max 1)
-                SetScale(Mathf.Max(1, (anchor.Bounds.extents.y - 0.5f) / ((shells.Count * spacing) + (shells.Count * 4 / 7.0f))));
-                Debug.Log(scale);
+                SetScale((anchor.Bounds.extents.y - 0.5f) / CalcRadius(shells.Count, 1));
             }
+            */
             SetShellRadius();
         }
 
@@ -188,19 +191,19 @@ namespace Atom
             Shell shell = obj.GetComponent<Shell>();
 
             //set attributes based on shell layer
-            
             shell.MaxParticles = Elements.GetMaxElectrons(shells.Count, Nucleus.ProtonCount);
             shell.NextShell = shells.Count == 0 ? null : OuterShell;
 
             //push shell onto stack
             shells.Push(shell);
-
-            if(CalcRadius(shells.Count) > anchor.Bounds.extents.y - 0.5f)
+           
+            /*
+            if(CalcRadius(shells.Count, scale) > anchor.Bounds.extents.y - 0.5f)
             {
                 //calculate the new scale to match bounds radius
-                SetScale((anchor.Bounds.extents.y - 0.5f) / ((shells.Count * spacing) + (shells.Count * 4 / 7.0f)));
-                Debug.Log(scale);
-            }
+                SetScale((anchor.Bounds.extents.y - 0.5f) / CalcRadius(shells.Count, 1));
+            }*/
+
             SetShellRadius();
 
             //fill the outer shell 
@@ -215,15 +218,15 @@ namespace Atom
 
         private void SetScale(float scale)
         {
-            this.scale = scale;
+            this.scale = Mathf.Max(1, scale);
 
             //set nucleus scale
-            Nucleus.Scale = scale;
+            Nucleus.Scale = this.scale;
 
             //set scale for each shell
             foreach(Shell shell in shells)
             {
-                shell.Scale = scale;
+                shell.Scale = this.scale;
             }
         }
 
@@ -232,12 +235,12 @@ namespace Atom
             int num = shells.Count;
             foreach (Shell s in shells)
             {
-                s.radius = CalcRadius(num);
+                s.radius = CalcRadius(num, scale);
                 num--;
             }
         }
 
-        private float CalcRadius(int num)
+        private float CalcRadius(int num, float scale)
         {
             return ((num * spacing) + (shells.Count * 4 / 7.0f)) * scale;
         }
