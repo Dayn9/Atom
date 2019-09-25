@@ -23,7 +23,7 @@ namespace Atom
         //get and set the radius in Unity Units
         public float Radius {
             get { return transform.localScale.x / 2; }
-            set { transform.localScale = Vector3.one * 2 * value; }
+            set { transform.localScale = Vector3.one * 2.0f * value; }
         }
 
         public PhysicsObject PhysicsObj { get; private set; }

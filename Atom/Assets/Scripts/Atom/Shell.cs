@@ -11,6 +11,7 @@ namespace Atom
 
         private List<Particle> particles; //list of all the particles in this shell
         private float seperationDistance; //how far apart each electron should be
+        private float scale = 1;
 
         public float radius; //desired orbital radius
 
@@ -20,7 +21,18 @@ namespace Atom
         public bool Full { get { return ElectronCount == MaxParticles; } }
         public bool Empty { get { return ElectronCount == 0; } }
         public Particle[] Particles { get { return particles.ToArray(); } }
-        
+        public float Scale
+        {
+            set
+            {
+                scale = value;
+                foreach (Particle particle in particles)
+                {
+                    particle.Radius = scale / 4;
+                }
+            }
+        }
+
 
         private void Awake()
         {
@@ -34,8 +46,6 @@ namespace Atom
         /// <returns>true if sucessfully added</returns>
         public bool AddParticle(Particle particle)
         {
-
-
             if(NextShell != null && !NextShell.Full)
             {
                 return NextShell.AddParticle(particle);
@@ -46,6 +56,7 @@ namespace Atom
                 //add the particle
                 particles.Add(particle);
                 particle.transform.SetParent(transform);
+                particle.Radius = scale / 4;
 
                 //calculate the new seperation distance
                 seperationDistance = SeperationDistance(particles.Count);

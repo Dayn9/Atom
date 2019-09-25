@@ -16,11 +16,23 @@ namespace Atom
         [SerializeField] private float rotationSpeed; //degees to spin 
 
         private List<Particle> particles; //list of all particles in nucleus
+        private float scale = 1;
 
         public int ProtonCount { get; private set; } = 0;
         public int NeutronCount { get; private set; } = 0;
         public int Mass { get { return ProtonCount + NeutronCount; } }
         public bool Shake { private get; set; }
+        public float Scale
+        {
+            set
+            {
+                scale = value;
+                foreach (Particle particle in particles)
+                {
+                    particle.Radius = scale / 2;
+                }
+            }
+        }
 
         public int MassMax { get; set; }
         public int MassMin { get; set; }
@@ -55,6 +67,7 @@ namespace Atom
                 //add the particle and set the parent
                 particles.Add(particle);
                 particle.transform.SetParent(transform);
+                particle.Radius = scale / 2;
                 return true;
             }
             else if (particle.GetType().Equals(typeof(Neutron)) && NeutronCount < MassMax - ProtonCount)
@@ -64,6 +77,7 @@ namespace Atom
                 //add the particle and set the parent
                 particles.Add(particle);
                 particle.transform.SetParent(transform);
+                particle.Radius = scale / 2;
                 return true;
             }
             return false;

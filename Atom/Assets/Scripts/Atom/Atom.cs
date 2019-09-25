@@ -14,12 +14,12 @@ namespace Atom
 
         [SerializeField] private GameObject shellTemplate;
         [SerializeField] private Workbench workbench;
-        [SerializeField] private float nucleusRadius; //TODO replace with actual calculation
         [SerializeField] private float spacing; //spacing between electron shells 
         [SerializeField] private float seperateSpeed; //speed particles fly away at
         private Stack<Shell> shells; //stack of electron shells
         private DUIAnchor anchor; //ref to own DUI anchor
         private List<Particle> excessParticles; //particles that are not part of the atom 
+        private float scale = 1;
 
         public Nucleus Nucleus { get; private set; }
         public Shell OuterShell { get { return shells.Peek(); } }
@@ -34,7 +34,6 @@ namespace Atom
             }
         }
         public Element Element { get; private set; }
-        
 
         private void Awake()
         {
@@ -43,9 +42,6 @@ namespace Atom
             shells = new Stack<Shell>();
 
             excessParticles = new List<Particle>();
-
-            //add the first shell
-            AddShell();
         }
 
         private void Update()
@@ -81,7 +77,7 @@ namespace Atom
                 Nucleus.TrimNeutrons(); 
             }
 
-            //add or remove shells to match proton count
+            //add or remove shells to match element period
             if (shells.Count < Elements.GetShells(Nucleus.ProtonCount))
             {
                 AddShell();
@@ -90,15 +86,6 @@ namespace Atom
             {
                 RemoveShell();
             }
-            
-            //remove the outer shell when proton cout is less than noble gas index
-
-            /*
-            //check if the outermost shell is full
-            if (OuterShell.Full && shells.Count < 3)
-            {
-                AddShell();
-            }*/
         }
 
         private void FixedUpdate()
@@ -159,11 +146,6 @@ namespace Atom
         /// <returns>removal scucess</returns>
         public bool RemoveElectron(Particle particle)
         {
-            /*
-            //remove the Outer shell if empty, next shell is now the Outer shell
-            if (OuterShell.Empty && OuterShell.NextShell != null)
-                RemoveShell();*/
-
             //start the recursive call to remove from outer shell
             return OuterShell.RemoveParticle(particle);
         }
@@ -182,14 +164,21 @@ namespace Atom
 
             //destroy the shell object
             Destroy(shells.Pop().gameObject);
+
+            if (CalcRadius(shells.Count) < anchor.Bounds.extents.y - 0.5f)
+            {
+                //calculate the new scale to match bounds radius (max 1)
+                SetScale(Mathf.Max(1, (anchor.Bounds.extents.y - 0.5f) / ((shells.Count * spacing) + (shells.Count * 4 / 7.0f))));
+                Debug.Log(scale);
+            }
+            SetShellRadius();
         }
 
         /// <summary>
         /// Add a new outer shell
         /// </summary>
         private void AddShell()
-        {
-                           
+        {    
             //create a new shell object
             GameObject obj = Instantiate(shellTemplate, transform);
             obj.SetActive(true);
@@ -199,12 +188,20 @@ namespace Atom
             Shell shell = obj.GetComponent<Shell>();
 
             //set attributes based on shell layer
-            shell.radius = (shells.Count * spacing) + nucleusRadius;
-            shell.MaxParticles = Elements.electronsPerShell[shells.Count];
+            
+            shell.MaxParticles = Elements.GetMaxElectrons(shells.Count, Nucleus.ProtonCount);
             shell.NextShell = shells.Count == 0 ? null : OuterShell;
 
             //push shell onto stack
             shells.Push(shell);
+
+            if(CalcRadius(shells.Count) > anchor.Bounds.extents.y - 0.5f)
+            {
+                //calculate the new scale to match bounds radius
+                SetScale((anchor.Bounds.extents.y - 0.5f) / ((shells.Count * spacing) + (shells.Count * 4 / 7.0f)));
+                Debug.Log(scale);
+            }
+            SetShellRadius();
 
             //fill the outer shell 
             if (OuterShell.NextShell != null)
@@ -214,6 +211,35 @@ namespace Atom
                     workbench.NewAutoElectron();
                 }
             }
+        }
+
+        private void SetScale(float scale)
+        {
+            this.scale = scale;
+
+            //set nucleus scale
+            Nucleus.Scale = scale;
+
+            //set scale for each shell
+            foreach(Shell shell in shells)
+            {
+                shell.Scale = scale;
+            }
+        }
+
+        private void SetShellRadius()
+        {
+            int num = shells.Count;
+            foreach (Shell s in shells)
+            {
+                s.radius = CalcRadius(num);
+                num--;
+            }
+        }
+
+        private float CalcRadius(int num)
+        {
+            return ((num * spacing) + (shells.Count * 4 / 7.0f)) * scale;
         }
 
     }

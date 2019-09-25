@@ -405,6 +405,20 @@ namespace Atom
 
         public static int[] electronsPerShell = new int[] { 2, 8, 8 };
 
+        public static int[] sblock = new int[] { 2, 2, 2, 2, 2, 2, 2 };
+        public static int[] pblock = new int[] { 0, 6, 6, 6, 6, 6, 0 };
+        public static int[] dblock = new int[] { 0, 0, 10, 10, 10, 10, 0 };
+        public static int[] fblock = new int[] { 0, 0, 0, 14, 14, 0, 0 };
+
+        public static int GetMaxElectrons(int shell, int protonCount)
+        {
+            int e = sblock[shell];
+            e += protonCount > 2 ? pblock[shell] : 0;
+            e += protonCount > 18 ? dblock[shell] : 0;
+            e += protonCount > 54 ? fblock[shell] : 0;
+            return e;
+        }
+
         public static int GetShells(int protonCount)
         {
             if (protonCount == 0)
@@ -415,7 +429,7 @@ namespace Atom
                 return 2;
             if (protonCount <= 2 + 8 + 8)
                 return 3;
-            return 3;
+            return 4;
         }
     }
 
