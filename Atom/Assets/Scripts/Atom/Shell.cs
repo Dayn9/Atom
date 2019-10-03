@@ -12,8 +12,17 @@ namespace Atom
         private List<Particle> particles; //list of all the particles in this shell
         private float seperationDistance; //how far apart each electron should be
         private float scale = 1;
+        private float radius;
 
-        public float radius; //desired orbital radius
+        public float Radius
+        {
+            get { return radius; }
+            set
+            {
+                radius = value;
+                SeperationDistance(particles.Count);
+            }
+        }//desired orbital radius
 
         public int ElectronCount { get { return particles.Count; } }
         public Shell NextShell { get; set; }
@@ -109,7 +118,7 @@ namespace Atom
             {
                 //calculate force to get into orbit
                 Vector3 diffRadius = transform.position - particle.PhysicsObj.Position;
-                Vector2 forceToRadius = diffRadius.normalized * (diffRadius.magnitude - radius) * particleSpeed;
+                Vector2 forceToRadius = diffRadius.normalized * (diffRadius.magnitude - Radius) * particleSpeed;
 
                 //calculate force to maintain orbit
                 Vector2 forceToOrbit = new Vector2(-diffRadius.y, diffRadius.x).normalized * orbitSpeed;
@@ -148,6 +157,25 @@ namespace Atom
             }
         }
 
+        public void TrimElectrons(int num)
+        {
+            if (num > 0)
+            {
+                Particle[] pA = particles.ToArray(); // copy to array so list can be mutated
+                foreach (Particle particle in pA)
+                {
+                    RemoveParticle(particle);
+                    particle.OnDeselect?.Invoke();
+
+                    if (--num <= 0)
+                        return;
+                }
+
+                //trim remaining from next shell
+                NextShell.TrimElectrons(num);
+            }
+        }
+
         /// <summary>
         /// calculates the distance between points when n points are equally spaced on peremiter of circle
         /// </summary>
@@ -155,14 +183,14 @@ namespace Atom
         /// <returns>distance between points</returns>
         private float SeperationDistance(int n)
         {
-            return 2 * radius * Mathf.Sin(Mathf.PI / n);
+            return 2 * Radius * Mathf.Sin(Mathf.PI / n);
         }
 
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.green;
 
-            Gizmos.DrawWireSphere(transform.position, radius);
+            Gizmos.DrawWireSphere(transform.position, Radius);
         }
     }
 }

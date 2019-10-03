@@ -46,22 +46,31 @@ namespace Atom
             NewAutoProton();
         }
 
-        public void NewAutoProton()
+        public void NewAutoProton(int num = 1)
         {
-            Debug.Log("New Proton");
-            Instantiate(ProtonPrefab, transform.GetChild(0)).GetComponent<Proton>().OnDeselect?.Invoke();
+            for (int i = 0; i < num; i++)
+            {
+                Debug.Log("New Proton");
+                Instantiate(ProtonPrefab, transform.GetChild(0)).GetComponent<Proton>().OnDeselect?.Invoke();
+            }
         }
 
-        public void NewAutoNeutron()
+        public void NewAutoNeutron(int num = 1)
         {
-            Debug.Log("New Neutron");
-            Instantiate(NeutronPrefab, transform.GetChild(1)).GetComponent<Neutron>().OnDeselect?.Invoke();
+            for (int i = 0; i < num; i++)
+            {
+                Debug.Log("New Neutron");
+                Instantiate(NeutronPrefab, transform.GetChild(1)).GetComponent<Neutron>().OnDeselect?.Invoke();
+            }
         }
 
-        public void NewAutoElectron()
+        public void NewAutoElectron(int num = 1)
         {
-            Debug.Log("New Electron");
-            Instantiate(ElectronPrefab, transform.GetChild(2)).GetComponent<Electron>().OnDeselect?.Invoke();
+            for (int i = 0; i < num; i++)
+            {
+                Debug.Log("New Electron");
+                Instantiate(ElectronPrefab, transform.GetChild(2)).GetComponent<Electron>().OnDeselect?.Invoke();
+            }
         }
         /// <summary>
         /// create a new proton
@@ -112,4 +121,3 @@ namespace Atom
         }
     }
 }
-

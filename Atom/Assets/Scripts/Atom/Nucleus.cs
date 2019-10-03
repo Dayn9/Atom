@@ -112,20 +112,47 @@ namespace Atom
             return false;
         } 
 
+        public void TrimProtons(int num)
+        {
+            if (num > 0)
+            {
+                Particle[] pA = particles.ToArray(); // copy to array so list can be mutated
+                foreach (Particle particle in pA)
+                {
+                    if (particle.GetType().Equals(typeof(Proton)))
+                    {
+                        RemoveParticle(particle);
+                        particle.OnDeselect?.Invoke();
+
+                        if (--num <= 0)
+                            return;
+                    }
+                }
+            }
+        }
+
         public void TrimNeutrons()
         {
             int diff = Mass - MassMax;
-            foreach(Particle particle in particles)
-            {
-                if (particle.GetType().Equals(typeof(Neutron)))
-                {
-                    RemoveParticle(particle);
-                    particle.OnDeselect?.Invoke();
+            TrimNeutrons(diff);
+        }
 
-                    diff++;
-                    if (diff >= 0)
-                        return;
-                }              
+        public void TrimNeutrons(int num)
+        {
+            if (num > 0)
+            {
+                Particle[] pA = particles.ToArray(); // copy to array so list can be mutated
+                foreach (Particle particle in pA)
+                {
+                    if (particle.GetType().Equals(typeof(Neutron)))
+                    {
+                        RemoveParticle(particle);
+                        particle.OnDeselect?.Invoke();
+
+                        if (--num <= 0)
+                            return;
+                    }
+                }
             }
         }
 

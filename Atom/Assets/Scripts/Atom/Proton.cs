@@ -33,7 +33,7 @@ namespace Atom
 
         protected override void DropParticle()
         {
-            if (!inAtom && (atom.Contains(transform.position) || atom.Nucleus.ProtonCount == 0) && atom.Nucleus.AddParticle(this))
+            if (!inAtom && (!atom.Interactable || atom.Contains(transform.position) || atom.Nucleus.ProtonCount == 0) && atom.Nucleus.AddParticle(this))
             {
                 base.DropParticle();
                 Debug.Log("Proton Added");

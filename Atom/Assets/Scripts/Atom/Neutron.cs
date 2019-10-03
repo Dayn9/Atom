@@ -34,10 +34,10 @@ namespace Atom
         protected override void DropParticle()
         {
             //check not already part of atom, within atom bounds, and can actually be added
-            if (!inAtom && (atom.Contains(transform.position) || atom.Nucleus.Mass < atom.Nucleus.MassMin) && atom.Nucleus.AddParticle(this))
+            if (!inAtom && (!atom.Interactable || atom.Contains(transform.position) || atom.Nucleus.Mass < atom.Nucleus.MassMin) && atom.Nucleus.AddParticle(this))
             {
                 base.DropParticle();
-                Debug.Log("Nutron Added");
+                Debug.Log("Neutron Added");
             }
             //neutron out of bounds or could not be added
             else

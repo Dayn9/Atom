@@ -16,11 +16,13 @@ namespace Atom
         [SerializeField] private Workbench workbench;
         [SerializeField] private float spacing; //spacing between electron shells 
         [SerializeField] private float seperateSpeed; //speed particles fly away at
+        [SerializeField] private bool interactable; 
         private Stack<Shell> shells; //stack of electron shells
         private DUIAnchor anchor; //ref to own DUI anchor
         private List<Particle> excessParticles; //particles that are not part of the atom 
         private float scale = 1;
 
+        public bool Interactable { get { return interactable; } }
         public Nucleus Nucleus { get; private set; }
         public Shell OuterShell { get { return shells.Peek(); } }
         public int ElectronCount
@@ -167,13 +169,13 @@ namespace Atom
 
             if (shells.Count == 0)
                 return; //don't need to calculate radius of nothing
-            /*
+
             if (CalcRadius(shells.Count, scale) < anchor.Bounds.extents.y - 0.5f)
             {
                 //calculate the new scale to match bounds radius (max 1)
                 SetScale((anchor.Bounds.extents.y - 0.5f) / CalcRadius(shells.Count, 1));
             }
-            */
+            
             SetShellRadius();
         }
 
@@ -196,29 +198,85 @@ namespace Atom
 
             //push shell onto stack
             shells.Push(shell);
-           
-            /*
-            if(CalcRadius(shells.Count, scale) > anchor.Bounds.extents.y - 0.5f)
-            {
-                //calculate the new scale to match bounds radius
-                SetScale((anchor.Bounds.extents.y - 0.5f) / CalcRadius(shells.Count, 1));
-            }*/
 
-            SetShellRadius();
-
-            //fill the outer shell 
+            //fill the next shell 
             if (OuterShell.NextShell != null)
             {
+                workbench.NewAutoElectron(OuterShell.NextShell.MaxParticles - OuterShell.NextShell.ElectronCount);
+                
+                /*
                 for (int i = OuterShell.NextShell.ElectronCount; i < OuterShell.NextShell.MaxParticles; i++)
                 {
                     workbench.NewAutoElectron();
                 }
+                */
             }
+
+            if (CalcRadius(shells.Count, scale) > anchor.Bounds.extents.y - 0.5f)
+            {
+                //calculate the new scale to match bounds radius
+                SetScale((anchor.Bounds.extents.y - 0.5f) / CalcRadius(shells.Count, 1));
+            }
+
+            SetShellRadius();
+        }
+
+        /// <summary>
+        /// et the atom to the most common form of the current element
+        /// </summary>
+        public void ForceToCommon()
+        {
+            ForceToCommon(Nucleus.ProtonCount);
+        }
+
+        /// <summary>
+        /// Set the atom to the most common form of an element
+        /// </summary>
+        /// <param name="protonCount">atomic number of the element to set</param>
+        public void ForceToCommon(int protonCount)
+        {
+            //add or remove neutrons to match atomic number
+            int protonDiff = protonCount - Nucleus.ProtonCount;
+            workbench.NewAutoProton(protonDiff);
+            Nucleus.TrimProtons(-protonDiff);
+
+            //get the most common stable form of the element
+            Element element = Elements.GetElement(protonCount);
+            if (element != null)
+            {
+                //set the min and max isotope mass
+                Nucleus.MassMax = element.MaxIsotope;
+                Nucleus.MassMin = element.MinIsotope;
+
+                Isotope common = element.GetCommon();
+                if(common != null)
+                {
+                    //add or remove neutrons to match mass
+                    int neutronDiff = (common.Mass - protonCount) - Nucleus.NeutronCount;
+                    workbench.NewAutoNeutron(neutronDiff);
+                    Nucleus.TrimNeutrons(-neutronDiff);
+                }            
+            }
+
+            //add or remove shells to match element period
+            if (shells.Count < Elements.GetShells(protonCount))
+            {
+                AddShell();
+            }
+            else if (shells.Count > Elements.GetShells(protonCount))
+            {
+                RemoveShell();
+            }
+
+            //add or remove electrons to match charge
+            int electronDiff = protonCount - ElectronCount;
+            workbench.NewAutoElectron(electronDiff);
+            OuterShell.TrimElectrons(-electronDiff);
         }
 
         private void SetScale(float scale)
         {
-            this.scale = Mathf.Max(1, scale);
+            this.scale = Mathf.Min(1, scale);
 
             //set nucleus scale
             Nucleus.Scale = this.scale;
@@ -235,14 +293,14 @@ namespace Atom
             int num = shells.Count;
             foreach (Shell s in shells)
             {
-                s.radius = CalcRadius(num, scale);
+                s.Radius = CalcRadius(num, scale);
                 num--;
             }
         }
 
         private float CalcRadius(int num, float scale)
         {
-            return ((num * spacing) + (shells.Count * 4 / 7.0f)) * scale;
+            return ((num * spacing) + (shells.Count * 3 / 7.0f)) * scale;
         }
 
     }

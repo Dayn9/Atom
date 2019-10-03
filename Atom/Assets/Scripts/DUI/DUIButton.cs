@@ -33,7 +33,7 @@ namespace DUI
         {
             //only check for events when active
 
-#if UNITY_EDITOR || UNITY_STANDALONE
+//#if UNITY_EDITOR || UNITY_STANDALONE
             if (active)
             {
                 bool over = anchor.Bounds.Contains(DUI.inputPos);
@@ -52,6 +52,7 @@ namespace DUI
                 {
                     OnClick?.Invoke();
                 }
+                /*
 #elif UNITY_ANDROID || UNITY_IOS
             if (active && Input.touchCount == 1)
             {
@@ -71,7 +72,7 @@ namespace DUI
                 {
                     OnClick?.Invoke();
                 }
-#endif
+#endif*/
             }
             //call exit if disabled with mouse over
             else if (wasOver)

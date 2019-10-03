@@ -15,9 +15,9 @@ namespace Atom
             #region Period 1 elements
             new Element("Hydrogen", "H", 
                 new Isotope[]{
-                    new Isotope(1, true, "Protium"),
-                    new Isotope(2, true, "Deuterium"),
-                    new Isotope(3, false, "Tritium"),
+                    new Isotope(1, true, 99.985f, "Protium"),
+                    new Isotope(2, true, 0.015f, "Deuterium"),
+                    new Isotope(3, false, 0.0f, "Tritium"),
                     new Isotope(4),
                     new Isotope(5),
                     new Isotope(6),
@@ -25,9 +25,9 @@ namespace Atom
                 }),
             new Element("Helium", "He", 
                 new Isotope[]{
-                    new Isotope(2 , false, "DiProton"),
-                    new Isotope(3, true),
-                    new Isotope(4, true), 
+                    new Isotope(2 , false, 0.0f, "DiProton"),
+                    new Isotope(3, true, 0.000137f),
+                    new Isotope(4, true, 99.999863f), 
                     new Isotope(5),
                     new Isotope(6),
                     new Isotope(7),
@@ -43,8 +43,8 @@ namespace Atom
                     new Isotope(3),
                     new Isotope(4),
                     new Isotope(5),
-                    new Isotope(6, true),
-                    new Isotope(7, true),
+                    new Isotope(6, true, 7.59f),
+                    new Isotope(7, true, 92.41f),
                     new Isotope(8),
                     new Isotope(9),
                     new Isotope(10),
@@ -57,7 +57,7 @@ namespace Atom
                     new Isotope(6),
                     new Isotope(7),
                     new Isotope(8),
-                    new Isotope(9, true),
+                    new Isotope(9, true, 100.0f),
                     new Isotope(10),
                     new Isotope(11),
                     new Isotope(12),
@@ -72,8 +72,8 @@ namespace Atom
                     new Isotope(7),
                     new Isotope(8),
                     new Isotope(9),
-                    new Isotope(10, true),
-                    new Isotope(11, true),
+                    new Isotope(10, true, 19.8f),
+                    new Isotope(11, true, 80.2f),
                     new Isotope(12),
                     new Isotope(13),
                     new Isotope(14),
@@ -88,8 +88,8 @@ namespace Atom
                     new Isotope(9),
                     new Isotope(10),
                     new Isotope(11),
-                    new Isotope(12, true),
-                    new Isotope(13, true),
+                    new Isotope(12, true, 98.89f),
+                    new Isotope(13, true, 1.11f),
                     new Isotope(14),
                     new Isotope(15),
                     new Isotope(16),
@@ -106,8 +106,8 @@ namespace Atom
                     new Isotope(11),
                     new Isotope(12),
                     new Isotope(13),
-                    new Isotope(14, true),
-                    new Isotope(15, true),
+                    new Isotope(14, true, 99.634f),
+                    new Isotope(15, true, 0.366f),
                     new Isotope(16),
                     new Isotope(17),
                     new Isotope(18),
@@ -125,9 +125,9 @@ namespace Atom
                     new Isotope(13),
                     new Isotope(14),
                     new Isotope(15),
-                    new Isotope(16, true),
-                    new Isotope(17, true),
-                    new Isotope(18, true),
+                    new Isotope(16, true, 99.762f),
+                    new Isotope(17, true, 0.038f),
+                    new Isotope(18, true, 0.2f),
                     new Isotope(19),
                     new Isotope(20),
                     new Isotope(21),
@@ -146,7 +146,7 @@ namespace Atom
                     new Isotope(16),
                     new Isotope(17),
                     new Isotope(18),
-                    new Isotope(19, true),
+                    new Isotope(19, true, 100.0f),
                     new Isotope(20),
                     new Isotope(21),
                     new Isotope(22),
@@ -166,9 +166,9 @@ namespace Atom
                     new Isotope(17),
                     new Isotope(18),
                     new Isotope(19),
-                    new Isotope(20, true),
-                    new Isotope(21, true),
-                    new Isotope(22, true),
+                    new Isotope(20, true, 90.48f),
+                    new Isotope(21, true, 0.27f),
+                    new Isotope(22, true, 9.25f),
                     new Isotope(23),
                     new Isotope(24),
                     new Isotope(25),
@@ -192,7 +192,7 @@ namespace Atom
                     new Isotope(20),
                     new Isotope(21),
                     new Isotope(22),
-                    new Isotope(23, true),
+                    new Isotope(23, true, 100.0f),
                     new Isotope(24),
                     new Isotope(25),
                     new Isotope(26),
@@ -215,9 +215,9 @@ namespace Atom
                     new Isotope(21),
                     new Isotope(22),
                     new Isotope(23),
-                    new Isotope(24, true),
-                    new Isotope(25, true),
-                    new Isotope(26, true),
+                    new Isotope(24, true, 78.99f),
+                    new Isotope(25, true, 10.0f),
+                    new Isotope(26, true, 11.01f),
                     new Isotope(27),
                     new Isotope(28),
                     new Isotope(29),
@@ -242,7 +242,7 @@ namespace Atom
                     new Isotope(24),
                     new Isotope(25),
                     new Isotope(26),
-                    new Isotope(27, true),
+                    new Isotope(27, true, 100.0f),
                     new Isotope(28),
                     new Isotope(29),
                     new Isotope(30),
@@ -266,9 +266,9 @@ namespace Atom
                     new Isotope(25),
                     new Isotope(26),
                     new Isotope(27),
-                    new Isotope(28, true),
-                    new Isotope(29, true),
-                    new Isotope(30, true),
+                    new Isotope(28, true, 92.23f),
+                    new Isotope(29, true, 4.683f),
+                    new Isotope(30, true, 3.087f),
                     new Isotope(31),
                     new Isotope(32),
                     new Isotope(33),
@@ -293,7 +293,7 @@ namespace Atom
                     new Isotope(28),
                     new Isotope(29),
                     new Isotope(30),
-                    new Isotope(31, true),
+                    new Isotope(31, true, 100.0f),
                     new Isotope(32),
                     new Isotope(33),
                     new Isotope(34),
@@ -318,11 +318,11 @@ namespace Atom
                     new Isotope(29),
                     new Isotope(30),
                     new Isotope(31),
-                    new Isotope(32, true),
-                    new Isotope(33, true),
-                    new Isotope(34, true),
+                    new Isotope(32, true, 95.02f),
+                    new Isotope(33, true, 0.75f),
+                    new Isotope(34, true, 4.21f),
                     new Isotope(35),
-                    new Isotope(36, true),
+                    new Isotope(36, true, 0.02f),
                     new Isotope(37),
                     new Isotope(38),
                     new Isotope(39),
@@ -346,9 +346,9 @@ namespace Atom
                     new Isotope(32),
                     new Isotope(33),
                     new Isotope(34),
-                    new Isotope(35, true),
+                    new Isotope(35, true, 75.77f),
                     new Isotope(36),
-                    new Isotope(37, true),
+                    new Isotope(37, true, 24.23f),
                     new Isotope(38),
                     new Isotope(39),
                     new Isotope(40),
@@ -372,11 +372,11 @@ namespace Atom
                     new Isotope(33),
                     new Isotope(34),
                     new Isotope(35),
-                    new Isotope(36, true),
+                    new Isotope(36, true, 0.3365f),
                     new Isotope(37),
-                    new Isotope(38, true),
+                    new Isotope(38, true, 0.0632f),
                     new Isotope(39),
-                    new Isotope(40, true),
+                    new Isotope(40, true, 99.6003f),
                     new Isotope(41),
                     new Isotope(42),
                     new Isotope(43),
@@ -402,8 +402,6 @@ namespace Atom
             }
             return null;
         }
-
-        public static int[] electronsPerShell = new int[] { 2, 8, 8 };
 
         public static int[] sblock = new int[] { 2, 2, 2, 2, 2, 2, 2 };
         public static int[] pblock = new int[] { 0, 6, 6, 6, 6, 6, 0 };
@@ -459,18 +457,37 @@ namespace Atom
             }
             return null;
         }
+
+        /// <summary>
+        /// gets the most common isotope of the element
+        /// </summary>
+        /// <returns></returns>
+        public Isotope GetCommon()
+        {
+            Isotope common = null;
+            foreach(Isotope isotope in Isotopes)
+            {
+                if(isotope.Stable && (common == null || isotope.Abundance > common.Abundance))
+                {
+                    common = isotope;
+                }
+            }
+            return common;
+        }
     }
 
     public class Isotope
     {
         public int Mass { get; }
         public bool Stable { get; }
+        public float Abundance { get; }
         public string FormalName { get; }
 
-        public Isotope(int mass, bool stable = false, string formalName = "")
+        public Isotope(int mass, bool stable = false, float abundance = 0.0f, string formalName = "")
         {
             Mass = mass;
             Stable = stable;
+            Abundance = abundance;
             FormalName = formalName;
         }
     }
