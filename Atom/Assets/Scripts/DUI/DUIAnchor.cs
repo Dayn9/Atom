@@ -19,6 +19,21 @@ namespace DUI
         public Bounds Bounds { get { return bounds; } }
         public Rect Rect { get { return new Rect(bounds.center, bounds.size); } }
 
+        public Vector2[] MinMax
+        {
+            get { return new Vector2[] { min, max }; }
+            set
+            {
+                min = value[0];
+                max = value[1];
+                DUIAnchor parentAnchor = transform.parent.GetComponent<DUIAnchor>();
+                if (parentAnchor == null)
+                    SetPosition(new Bounds(Vector2.zero, new Vector2(DUI.cameraWidth, DUI.cameraHeight) * 2));
+                else
+                    SetPosition(parentAnchor.Bounds);
+            }
+        }
+
         private void Start()
         {
             //parent node starts the recursive call using the full camera space as bounds
