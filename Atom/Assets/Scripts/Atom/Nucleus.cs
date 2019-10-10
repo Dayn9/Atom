@@ -12,8 +12,8 @@ namespace Atom
         /// Handles the behavior of Atom's nucleus
         /// </summary>
 
-        [SerializeField] private float particleSpeed; //magnitude of force to center
-        [SerializeField] private float rotationSpeed; //degees to spin 
+        private const float particleSpeed = 1.2f; //magnitude of force to center
+        private const float rotationSpeed = 20; //degees to spin 
 
         private List<Particle> particles; //list of all particles in nucleus
         private float scale = 1;
@@ -173,14 +173,21 @@ namespace Atom
             else
             {
                 physicsObject.AddForce(forceToOrigin);
-            }          
+            }
+
+            float m = 0;
 
             foreach (Particle particle in particles)
             {
                 //find the distance from origin
                 Vector3 diffOrgin = transform.position - particle.PhysicsObj.Position;
                 //calculate the force to center ( clamp is used so particles slow near center
-                Vector3 forceToCenter = Vector3.ClampMagnitude(diffOrgin.normalized * particleSpeed, diffOrgin.magnitude);
+                Vector3 forceToCenter = Vector3.ClampMagnitude(diffOrgin.normalized * (particleSpeed * scale), diffOrgin.magnitude);
+
+                if(diffOrgin.magnitude > m)
+                {
+                    m = diffOrgin.magnitude;
+                }
 
                 //calculate the force to seperate
                 Vector3 forceToSeperate = Vector3.zero;
@@ -210,9 +217,17 @@ namespace Atom
                         }
                     }
                 }
+                forceToSeperate *= particleSpeed * scale;
                 //apply forces to the particles
                 particle.PhysicsObj.AddForce(forceToCenter + forceToSeperate);
             }
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.red;
+
+            Gizmos.DrawWireSphere(transform.position, Mathf.Log(Mass, 30 / scale) * scale + (scale / 2));
         }
     }
 }

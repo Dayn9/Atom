@@ -403,6 +403,8 @@ namespace Atom
             return null;
         }
 
+        public static int NumElements { get { return elements.Length; } }
+
         public static int[] sblock = new int[] { 2, 2, 2, 2, 2, 2, 2 };
         public static int[] pblock = new int[] { 0, 6, 6, 6, 6, 6, 0 };
         public static int[] dblock = new int[] { 0, 0, 10, 10, 10, 10, 0 };

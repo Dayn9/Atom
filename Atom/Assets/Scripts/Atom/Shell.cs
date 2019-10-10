@@ -20,7 +20,7 @@ namespace Atom
             set
             {
                 radius = value;
-                SeperationDistance(particles.Count);
+                CalcSeperationDistance();
             }
         }//desired orbital radius
 
@@ -68,7 +68,7 @@ namespace Atom
                 particle.Radius = scale / 4;
 
                 //calculate the new seperation distance
-                seperationDistance = SeperationDistance(particles.Count);
+                CalcSeperationDistance();
                 return true;
             }
             return false;
@@ -88,7 +88,7 @@ namespace Atom
                 particle.transform.SetParent(null);
 
                 //calculate the new seperation distance
-                seperationDistance = SeperationDistance(particles.Count);
+                CalcSeperationDistance();
                 return true;
             }
             //not in shell, check the next one
@@ -104,7 +104,7 @@ namespace Atom
                         particles.Remove(transferParticle);
                         NextShell.AddParticle(transferParticle);
 
-                        seperationDistance = SeperationDistance(particles.Count);
+                        CalcSeperationDistance();
                     }
                     return true;
                 }
@@ -151,6 +151,7 @@ namespace Atom
                         }
                     }
                 }
+                forceToSeperate *= particleSpeed;
 
                 //apply forces to the particles
                 particle.PhysicsObj.AddForce(forceToRadius + forceToOrbit + forceToSeperate);
@@ -181,9 +182,9 @@ namespace Atom
         /// </summary>
         /// <param name="n">number of points on circle</param>
         /// <returns>distance between points</returns>
-        private float SeperationDistance(int n)
+        private void CalcSeperationDistance()
         {
-            return 2 * Radius * Mathf.Sin(Mathf.PI / n);
+            seperationDistance = 2 * Radius * Mathf.Sin(Mathf.PI / particles.Count);
         }
 
         private void OnDrawGizmosSelected()

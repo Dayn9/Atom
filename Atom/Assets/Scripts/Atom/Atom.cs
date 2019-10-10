@@ -14,7 +14,6 @@ namespace Atom
 
         [SerializeField] private GameObject shellTemplate;
         [SerializeField] private Workbench workbench;
-        [SerializeField] private float spacing; //spacing between electron shells 
         [SerializeField] private float seperateSpeed; //speed particles fly away at
         [SerializeField] private bool interactable; 
         private Stack<Shell> shells; //stack of electron shells
@@ -83,10 +82,12 @@ namespace Atom
             if (shells.Count < Elements.GetShells(Nucleus.ProtonCount))
             {
                 AddShell();
+                AdjustScale();
             }
             else if (shells.Count > Elements.GetShells(Nucleus.ProtonCount))
             {
                 RemoveShell();
+                AdjustScale();
             }
         }
 
@@ -169,14 +170,6 @@ namespace Atom
 
             if (shells.Count == 0)
                 return; //don't need to calculate radius of nothing
-
-            if (CalcRadius(shells.Count, scale) < anchor.Bounds.extents.y - 0.5f)
-            {
-                //calculate the new scale to match bounds radius (max 1)
-                SetScale((anchor.Bounds.extents.y - 0.5f) / CalcRadius(shells.Count, 1));
-            }
-            
-            SetShellRadius();
         }
 
         /// <summary>
@@ -203,22 +196,7 @@ namespace Atom
             if (OuterShell.NextShell != null)
             {
                 workbench.NewAutoElectron(OuterShell.NextShell.MaxParticles - OuterShell.NextShell.ElectronCount);
-                
-                /*
-                for (int i = OuterShell.NextShell.ElectronCount; i < OuterShell.NextShell.MaxParticles; i++)
-                {
-                    workbench.NewAutoElectron();
-                }
-                */
             }
-
-            if (CalcRadius(shells.Count, scale) > anchor.Bounds.extents.y - 0.5f)
-            {
-                //calculate the new scale to match bounds radius
-                SetScale((anchor.Bounds.extents.y - 0.5f) / CalcRadius(shells.Count, 1));
-            }
-
-            SetShellRadius();
         }
 
         /// <summary>
@@ -272,37 +250,48 @@ namespace Atom
             int electronDiff = protonCount - ElectronCount;
             workbench.NewAutoElectron(electronDiff);
             OuterShell.TrimElectrons(-electronDiff);
+
+            AdjustScale();
         }
 
-        private void SetScale(float scale)
+        /// <summary>
+        /// Adjust the scale of all 
+        /// </summary>
+        public void AdjustScale()
         {
-            this.scale = Mathf.Min(1, scale);
+            //calculate scale = maxRadius / baseRadius 
+            float minAxis = Mathf.Min(anchor.Bounds.extents.x, anchor.Bounds.extents.y); //minor axis
+            scale = Mathf.Min(1, (minAxis * 0.9f) / CalcRadius(shells.Count, 1));
 
             //set nucleus scale
-            Nucleus.Scale = this.scale;
+            Nucleus.Scale = scale;
 
-            //set scale for each shell
-            foreach(Shell shell in shells)
-            {
-                shell.Scale = this.scale;
-            }
-        }
-
-        private void SetShellRadius()
-        {
+            //update shells to match scale
             int num = shells.Count;
-            foreach (Shell s in shells)
+            foreach (Shell shell in shells)
             {
-                s.Radius = CalcRadius(num, scale);
+                //set the scale
+                shell.Scale = scale;
+                //set the radius
+                shell.Radius = CalcRadius(num, scale);
                 num--;
             }
         }
 
+        /// <summary>
+        /// Helper method for adjusting scale
+        /// Calculates shell radius at scale
+        /// </summary>
+        /// <param name="num">shell number</param>
+        /// <param name="scale">current scale of the atom</param>
+        /// <returns>Radius of shell (num) at scale</returns>
         private float CalcRadius(int num, float scale)
         {
-            return ((num * spacing) + (shells.Count * 3 / 7.0f)) * scale;
-        }
+            float nucleusRadius = Mathf.Log(Nucleus.Mass , 30 / scale) * scale + (scale / 2); //experimental max difference from center + particle width
+            float shellRadiusDifference = scale * num;
 
+            return nucleusRadius + shellRadiusDifference;
+        }
     }
 }
 

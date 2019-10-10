@@ -15,7 +15,7 @@ namespace Atom
         {
             texts = GetComponentsInChildren<Text>();
 
-            for(int i = 0; i<18; i++)
+            for(int i = 0; i<Elements.NumElements; i++)
             {
                 int protonCount = i + 1; //create a new int for button to reference
 
@@ -32,11 +32,18 @@ namespace Atom
                     }
                 }
             }
+            for(int i = Elements.NumElements; i< texts.Length; i++)
+            {
+                texts[i].text = "";
+            }
         }
 
+        /// <summary>
+        /// Set the display element to the common form of whatever was just selected
+        /// </summary>
+        /// <param name="protonCount">proton count of element to set</param>
         private void SetElement(int protonCount)
         {
-
             Debug.Log("Show element: " + Elements.GetElement(protonCount).Name);
 
             if(atom != null)
