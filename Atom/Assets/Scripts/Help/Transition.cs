@@ -43,10 +43,6 @@ public class Transition : MonoBehaviour
             {
                 DUITrans.Update(p);  
             }
-            foreach (UITrans UITrans in transitions[index].UItransitions)
-            {
-                UITrans.Update(p);
-            }
             if (transitions[index].atomTransition != null)
             {
                 transitions[index].atomTransition.atom.AdjustScale();
@@ -61,7 +57,7 @@ public class Trans
     public string name;
 
     public DUITrans[] DUItransitions;
-    public UITrans[] UItransitions;
+    //public UITrans[] UItransitions;
     public AtomTrans atomTransition;
 }
 

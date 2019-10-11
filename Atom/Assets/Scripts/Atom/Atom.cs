@@ -43,6 +43,8 @@ namespace Atom
             shells = new Stack<Shell>();
 
             excessParticles = new List<Particle>();
+
+            ForceToCommon(1); //default to Hydrogen
         }
 
         private void Update()
@@ -79,12 +81,13 @@ namespace Atom
             }
 
             //add or remove shells to match element period
-            if (shells.Count < Elements.GetShells(Nucleus.ProtonCount))
+            while (shells.Count < Elements.GetShells(Nucleus.ProtonCount))
             {
                 AddShell();
                 AdjustScale();
             }
-            else if (shells.Count > Elements.GetShells(Nucleus.ProtonCount))
+
+            while (shells.Count > Elements.GetShells(Nucleus.ProtonCount))
             {
                 RemoveShell();
                 AdjustScale();
@@ -237,11 +240,12 @@ namespace Atom
             }
 
             //add or remove shells to match element period
-            if (shells.Count < Elements.GetShells(protonCount))
+            while (shells.Count < Elements.GetShells(protonCount))
             {
                 AddShell();
             }
-            else if (shells.Count > Elements.GetShells(protonCount))
+
+            while (shells.Count > Elements.GetShells(protonCount))
             {
                 RemoveShell();
             }

@@ -16,7 +16,7 @@ namespace Atom
             get { return transform.localScale.x / 2; }
             set {
                 transform.localScale = Vector3.one * 2.0f * value;
-                GetComponent<TrailRenderer>().startWidth = value / 2;
+                GetComponent<TrailRenderer>().startWidth = value;
             }
         }
 

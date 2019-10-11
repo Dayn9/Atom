@@ -1584,7 +1584,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transitions:
   - name: PeriodicTable
-    check: 0
     DUItransitions:
     - anchor: {fileID: 1670129176}
       min: {x: 0.3, y: 0.7}
@@ -1592,8 +1591,10 @@ MonoBehaviour:
     - anchor: {fileID: 2066764671}
       min: {x: 0.3, y: 1.1}
       max: {x: 0.6, y: 1.1}
+    atomTransition:
+      atom: {fileID: 1619073828}
+      interactable: 0
   - name: Freeplay
-    check: 1
     DUItransitions:
     - anchor: {fileID: 1670129176}
       min: {x: 0.2, y: 0}
@@ -1601,6 +1602,9 @@ MonoBehaviour:
     - anchor: {fileID: 2066764671}
       min: {x: 0.8, y: 0}
       max: {x: 1, y: 1}
+    atomTransition:
+      atom: {fileID: 1619073828}
+      interactable: 1
 --- !u!4 &112222480
 Transform:
   m_ObjectHideFlags: 0
@@ -10550,7 +10554,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 2.5, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 8.4e-44, y: 1e-45, z: 1, w: 1e-45}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -12303,7 +12307,7 @@ GameObject:
   - component: {fileID: 792571280}
   - component: {fileID: 792571279}
   m_Layer: 5
-  m_Name: Canvas (1)
+  m_Name: Canvas2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25412,16 +25416,6 @@ PrefabInstance:
         type: 3}
       propertyPath: rotationSpeed
       value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 8229583696858846742, guid: 317b2ad377f0e304ab5fde55502a95b8,
-        type: 3}
-      propertyPath: particleSpeed
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8229583696858846742, guid: 317b2ad377f0e304ab5fde55502a95b8,
-        type: 3}
-      propertyPath: orbitSpeed
-      value: 0.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 317b2ad377f0e304ab5fde55502a95b8, type: 3}

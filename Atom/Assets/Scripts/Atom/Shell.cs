@@ -35,7 +35,7 @@ namespace Atom
             set
             {
                 scale = value;
-                foreach (Particle particle in particles)
+                foreach (Electron particle in particles)
                 {
                     particle.Radius = scale / 4;
                 }
@@ -121,7 +121,7 @@ namespace Atom
                 Vector2 forceToRadius = diffRadius.normalized * (diffRadius.magnitude - Radius) * particleSpeed;
 
                 //calculate force to maintain orbit
-                Vector2 forceToOrbit = new Vector2(-diffRadius.y, diffRadius.x).normalized * orbitSpeed;
+                Vector2 forceToOrbit = new Vector2(-diffRadius.y, diffRadius.x).normalized * orbitSpeed * scale;
 
                 //calculate the force to seperate
                 Vector2 forceToSeperate = Vector3.zero;

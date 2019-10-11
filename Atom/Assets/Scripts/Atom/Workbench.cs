@@ -41,11 +41,6 @@ namespace Atom
             }
         }
 
-        private void Start()
-        {
-            NewAutoProton();
-        }
-
         public void NewAutoProton(int num = 1)
         {
             for (int i = 0; i < num; i++)
