@@ -21,7 +21,7 @@ namespace Atom
         private List<Particle> excessParticles; //particles that are not part of the atom 
         private float scale = 1;
 
-        public bool Interactable { get { return interactable; } }
+        public bool Interactable { get { return interactable; } set { interactable = value; } }
         public Nucleus Nucleus { get; private set; }
         public Shell OuterShell { get { return shells.Peek(); } }
         public int ElectronCount

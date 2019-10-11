@@ -1584,6 +1584,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transitions:
   - name: PeriodicTable
+    check: 0
     DUItransitions:
     - anchor: {fileID: 1670129176}
       min: {x: 0.3, y: 0.7}
@@ -1592,6 +1593,7 @@ MonoBehaviour:
       min: {x: 0.3, y: 1.1}
       max: {x: 0.6, y: 1.1}
   - name: Freeplay
+    check: 1
     DUItransitions:
     - anchor: {fileID: 1670129176}
       min: {x: 0.2, y: 0}
@@ -10548,7 +10550,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 3.45e-43, y: NaN, z: 3.45e-43, w: -5.4825938e+17}
+  m_BoundingSphereOverride: {x: 0, y: 2.5, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
