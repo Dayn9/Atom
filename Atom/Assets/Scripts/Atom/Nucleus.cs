@@ -60,7 +60,7 @@ namespace Atom
         public bool AddParticle(Particle particle)
         {
             //check type of particle
-            if (particle.GetType().Equals(typeof(Proton)) && ProtonCount < 18)
+            if (particle.GetType().Equals(typeof(Proton)) && ProtonCount < Elements.NumElements)
             {
                 ProtonCount++;
 

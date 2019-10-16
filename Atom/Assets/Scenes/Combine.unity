@@ -10554,7 +10554,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 8.4e-44, y: 1e-45, z: 1, w: 1e-45}
+  m_BoundingSphereOverride: {x: 3.01681e-40, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -25390,6 +25390,76 @@ PrefabInstance:
     - target: {fileID: 8229583697720943602, guid: 317b2ad377f0e304ab5fde55502a95b8,
         type: 3}
       propertyPath: seperateSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8229583697720943602, guid: 317b2ad377f0e304ab5fde55502a95b8,
+        type: 3}
+      propertyPath: sBlockColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8229583697720943602, guid: 317b2ad377f0e304ab5fde55502a95b8,
+        type: 3}
+      propertyPath: sBlockColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8229583697720943602, guid: 317b2ad377f0e304ab5fde55502a95b8,
+        type: 3}
+      propertyPath: sBlockColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8229583697720943602, guid: 317b2ad377f0e304ab5fde55502a95b8,
+        type: 3}
+      propertyPath: sBlockColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8229583697720943602, guid: 317b2ad377f0e304ab5fde55502a95b8,
+        type: 3}
+      propertyPath: pBlockColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8229583697720943602, guid: 317b2ad377f0e304ab5fde55502a95b8,
+        type: 3}
+      propertyPath: pBlockColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8229583697720943602, guid: 317b2ad377f0e304ab5fde55502a95b8,
+        type: 3}
+      propertyPath: pBlockColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8229583697720943602, guid: 317b2ad377f0e304ab5fde55502a95b8,
+        type: 3}
+      propertyPath: pBlockColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8229583697720943602, guid: 317b2ad377f0e304ab5fde55502a95b8,
+        type: 3}
+      propertyPath: dBlockColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8229583697720943602, guid: 317b2ad377f0e304ab5fde55502a95b8,
+        type: 3}
+      propertyPath: dBlockColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8229583697720943602, guid: 317b2ad377f0e304ab5fde55502a95b8,
+        type: 3}
+      propertyPath: fBlockColor.r
+      value: 0.49803922
+      objectReference: {fileID: 0}
+    - target: {fileID: 8229583697720943602, guid: 317b2ad377f0e304ab5fde55502a95b8,
+        type: 3}
+      propertyPath: fBlockColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8229583697720943602, guid: 317b2ad377f0e304ab5fde55502a95b8,
+        type: 3}
+      propertyPath: fBlockColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8229583697720943602, guid: 317b2ad377f0e304ab5fde55502a95b8,
+        type: 3}
+      propertyPath: fBlockColor.a
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8229583697720943603, guid: 317b2ad377f0e304ab5fde55502a95b8,
