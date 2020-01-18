@@ -10,7 +10,7 @@ namespace Atom
         /// Contains ALL the data about elements
         /// </summary>
 
-        private static Element[] elements = new Element[]
+        public static Element[] elements = new Element[]
         {
             #region Period 1 elements
             new Element("Hydrogen", "H", 
@@ -1004,6 +1004,7 @@ namespace Atom
         }
     }
 
+    [System.Serializable]
     public class Element
     {
         public string Name { get; }
@@ -1049,6 +1050,7 @@ namespace Atom
         }
     }
 
+    [System.Serializable]
     public class Isotope
     {
         public int Mass { get; }
