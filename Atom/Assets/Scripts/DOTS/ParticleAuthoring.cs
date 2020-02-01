@@ -20,7 +20,6 @@ public struct ElectronTag : IComponentData { }
 
 public enum ParticleType { Proton, Neutron, Electron }
 
-
 [DisallowMultipleComponent]
 [RequiresEntityConversion]
 public class ParticleAuthoring : MonoBehaviour, IConvertGameObjectToEntity
@@ -40,7 +39,7 @@ public class ParticleAuthoring : MonoBehaviour, IConvertGameObjectToEntity
         {
             Radius = Radius,
             Mass = Mass,
-            CohesionSpeed = 1.2f
+            CohesionSpeed = 1.0f
         });
 
         switch (Type)

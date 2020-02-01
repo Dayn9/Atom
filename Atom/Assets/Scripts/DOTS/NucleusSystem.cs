@@ -9,9 +9,7 @@ using static Unity.Mathematics.math;
 
 public class NucleusSystem : JobComponentSystem
 {
-    private EndSimulationEntityCommandBufferSystem m_EndSimECBSystem;
-
-    private EntityQuery m_ParticleQuery;
+    public static NativeList<float3> positionsBuffer;
 
     [BurstCompile]
     struct CohesionSystemJob : IJobForEach<Translation, Velocity, Particle>
@@ -27,6 +25,8 @@ public class NucleusSystem : JobComponentSystem
             Vector3 diffOrigin = origin - translation.Value;
             float3 cohesionForce = Vector3.ClampMagnitude(diffOrigin.normalized * particle.CohesionSpeed, diffOrigin.magnitude);
 
+            positionsBuffer.Add(translation.Value);
+
             velocity.Value += cohesionForce;
         }
     }
@@ -34,17 +34,37 @@ public class NucleusSystem : JobComponentSystem
     [BurstCompile]
     struct SeperationSystemJob : IJobForEach<Translation, Velocity, Particle>
     {
-        public float DeltaTime;
-
         public void Execute(
             ref Translation translation,
             ref Velocity velocity,
             ref Particle particle)
         {
-            
-            foreach(Particle part in particles)
+            float3 seperationForce = new float3();
+            foreach (float3 pos in positionsBuffer)
             {
+                //don't seperate from self
+                if (!translation.Value.Equals(pos))
+                {
+                    //find the distance between particles
+                    Vector3 diffOther = translation.Value - pos;
 
+                    //rare occurance, but seperate from identical other
+                    if (diffOther.sqrMagnitude < 0.01)
+                    {
+                        //seperationForce = Unity.Random.insideUnitSphere;
+                    }
+                    else
+                    {
+                        //calculate the amount of overlap
+                        float overlap = diffOther.magnitude - (2 * particle.Radius);
+                        //check if actually overlapping
+                        if (overlap < 0)
+                        {
+                            //add force to seperate
+                            seperationForce -= (float3)diffOther.normalized * overlap;
+                        }
+                    }
+                }
             }
         }
     }
@@ -55,57 +75,45 @@ public class NucleusSystem : JobComponentSystem
     struct NucleusSystemJob : IJobForEach<Translation, Velocity, Particle>
     {
         public float DeltaTime;
+        public float Drag;
 
         public void Execute(
-            ref Translation translation, 
+            ref Translation translation,
             ref Velocity velocity,
             ref Particle particle)
         {
-
-
+            velocity.Value = velocity.Value * (1 - Drag);
             translation.Value += velocity.Value * DeltaTime;
         }
     }
 
-    
-    
+
+
     protected override JobHandle OnUpdate(JobHandle inputDependencies)
     {
+        positionsBuffer = new NativeList<float3>();
 
-        var job = new NucleusSystemJob {
-            DeltaTime = Time.deltaTime
+        var cohesionJob = new CohesionSystemJob
+        {
+            origin = new float3(0, 0, 0),
         };
 
+        JobHandle collisionJobHandle = cohesionJob.Schedule(this, inputDependencies);
 
-        var particleCount = m_ParticleQuery.CalculateEntityCount();
-        if (particleCount > 0)
+        var seperationJob = new SeperationSystemJob
         {
-            var hashGrid = GetSingleton<BrickHashGrid>();
-            var seperation = new SeperationSystemJob
-            {
-                Ecb = m_EndSimECBSystem.CreateCommandBuffer().ToConcurrent(),
+        };
 
-                BrickGrid = hashGrid,
+        JobHandle seperationJobHandle = seperationJob.Schedule(this, collisionJobHandle);
 
-                BrickTranslationRO = GetComponentDataFromEntity<Position2D>(true),
-                BrickRectangleBoundsRO = GetComponentDataFromEntity<RectangleBounds>(true)
-            };
-
-            collideBrickHandle = brickJob.Schedule(this, paddleHandle);
-            m_EndSimECBSystem.AddJobHandleForProducer(collideBrickHandle);
-        }
-
-        // Now that the job is set up, schedule it to be run. 
-        return job.Schedule(this, inputDependencies);
-    }
-
-    protected override void OnCreate()
-    {
-        m_EndSimECBSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
-
-        m_ParticleQuery = GetEntityQuery(new EntityQueryDesc
+        var nucleusJob = new NucleusSystemJob
         {
-            All = new[] { ComponentType.ReadOnly<Velocity>(), ComponentType.ReadOnly<Particle>() }
-        });
+            DeltaTime = Time.deltaTime,
+            Drag = 0.01f
+        };
+
+        JobHandle nucleusJobHandle = nucleusJob.Schedule(this, seperationJobHandle);
+
+        return nucleusJobHandle;
     }
 }
