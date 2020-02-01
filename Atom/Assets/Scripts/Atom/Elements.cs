@@ -1694,7 +1694,9 @@ namespace Atom
                 return 2;
             if (protonCount <= 2 + 8 + 8)
                 return 3;
-            return 4;
+            if(protonCount <= 2 + 8 + 8 + 18)
+                return 4;
+            return 5;
         }
     }
 
