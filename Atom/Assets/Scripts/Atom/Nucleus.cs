@@ -175,7 +175,6 @@ namespace Atom
                 physicsObject.AddForce(forceToOrigin);
             }
 
-            float m = 0;
 
             foreach (Particle particle in particles)
             {
@@ -183,11 +182,6 @@ namespace Atom
                 Vector3 diffOrgin = transform.position - particle.PhysicsObj.Position;
                 //calculate the force to center ( clamp is used so particles slow near center
                 Vector3 forceToCenter = Vector3.ClampMagnitude(diffOrgin.normalized * (particleSpeed * scale), diffOrgin.magnitude);
-
-                if(diffOrgin.magnitude > m)
-                {
-                    m = diffOrgin.magnitude;
-                }
 
                 //calculate the force to seperate
                 Vector3 forceToSeperate = Vector3.zero;
