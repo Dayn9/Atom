@@ -9,14 +9,21 @@ using static Unity.Mathematics.math;
 
 public class NucleusSystem : JobComponentSystem
 {
-    public static NativeList<float3> positionsBuffer;
+    public NativeArray<float3> m_inData;
+    public NativeArray<float3> m_outData;
+
+    EntityQuery m_ParticleQuery;
 
     [BurstCompile]
-    struct CohesionSystemJob : IJobForEach<Translation, Velocity, Particle>
+    struct CohesionSystemJob : IJobForEachWithEntity<Translation, Velocity, Particle>
     {
         public float3 origin;
+        [ReadOnly] public NativeArray<float3> inData;
+        [WriteOnly] public NativeArray<float3> outData;
 
         public void Execute(
+            Entity entity, 
+            int index,
             ref Translation translation,
             ref Velocity velocity,
             ref Particle particle)
@@ -25,7 +32,7 @@ public class NucleusSystem : JobComponentSystem
             Vector3 diffOrigin = origin - translation.Value;
             float3 cohesionForce = Vector3.ClampMagnitude(diffOrigin.normalized * particle.CohesionSpeed, diffOrigin.magnitude);
 
-            positionsBuffer.Add(translation.Value);
+            outData[index] = translation.Value;
 
             velocity.Value += cohesionForce;
         }
@@ -34,19 +41,21 @@ public class NucleusSystem : JobComponentSystem
     [BurstCompile]
     struct SeperationSystemJob : IJobForEach<Translation, Velocity, Particle>
     {
+        [ReadOnly] public NativeArray<float3> outData;
+
         public void Execute(
             ref Translation translation,
             ref Velocity velocity,
             ref Particle particle)
         {
             float3 seperationForce = new float3();
-            foreach (float3 pos in positionsBuffer)
+            for(int i=0;i<outData.Length;i++) 
             {
                 //don't seperate from self
-                if (!translation.Value.Equals(pos))
+                if (!translation.Value.Equals(outData[i]))
                 {
                     //find the distance between particles
-                    Vector3 diffOther = translation.Value - pos;
+                    Vector3 diffOther = translation.Value - outData[i];
 
                     //rare occurance, but seperate from identical other
                     if (diffOther.sqrMagnitude < 0.01)
@@ -66,6 +75,8 @@ public class NucleusSystem : JobComponentSystem
                     }
                 }
             }
+
+            velocity.Value += seperationForce;
         }
     }
 
@@ -91,20 +102,28 @@ public class NucleusSystem : JobComponentSystem
 
     protected override JobHandle OnUpdate(JobHandle inputDependencies)
     {
-        positionsBuffer = new NativeList<float3>();
+        int particleCount = m_ParticleQuery.CalculateEntityCount();
+        
+        m_inData = new NativeArray<float3>(particleCount, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+        m_outData = new NativeArray<float3>(particleCount, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 
         var cohesionJob = new CohesionSystemJob
         {
             origin = new float3(0, 0, 0),
+            inData = m_inData,
+            outData = m_outData
         };
 
         JobHandle collisionJobHandle = cohesionJob.Schedule(this, inputDependencies);
+        collisionJobHandle.Complete();
 
         var seperationJob = new SeperationSystemJob
         {
+            outData = m_outData
         };
 
         JobHandle seperationJobHandle = seperationJob.Schedule(this, collisionJobHandle);
+        seperationJobHandle.Complete();
 
         var nucleusJob = new NucleusSystemJob
         {
@@ -114,6 +133,21 @@ public class NucleusSystem : JobComponentSystem
 
         JobHandle nucleusJobHandle = nucleusJob.Schedule(this, seperationJobHandle);
 
+        m_inData.Dispose();
+        m_outData.Dispose();
+
         return nucleusJobHandle;
+    }
+
+
+    protected override void OnCreate()
+    {
+        m_ParticleQuery = GetEntityQuery(new EntityQueryDesc
+        {
+            All = new[] { ComponentType.ReadOnly<Velocity>(), ComponentType.ReadOnly<Particle>() }
+        });
+       
+       
+        RequireForUpdate(m_ParticleQuery);
     }
 }
